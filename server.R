@@ -204,7 +204,9 @@ updateRadioGroupButtons(session, "mc1", selected = NULL, choices=list(
         updateButton(session, "nextq", disabled = TRUE)
         updateButton(session, "restart", disabled = FALSE)
       }
-      updateButton(session, "submit", disabled = TRUE)
+      else{
+        updateButton(session, "submit", disabled = TRUE)
+        updateButton(session, "nextq", disabled = FALSE)}
     } else {
       print('wrong')
       value[["mistake"]] <<- value[["mistake"]] + 1
@@ -220,7 +222,9 @@ updateRadioGroupButtons(session, "mc1", selected = NULL, choices=list(
         updateButton(session, "nextq", disabled = TRUE)
         updateButton(session, "restart", disabled = FALSE)
       }
+      else{
       updateButton(session, "submit", disabled = TRUE)
+      updateButton(session, "nextq", disabled = FALSE)}
     }
     output$mark <- renderUI({
       if (input$mc1 == cAnswer) {
