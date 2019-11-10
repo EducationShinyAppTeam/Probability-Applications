@@ -25,7 +25,7 @@ shinyServer(function(input, output, session) {
   })
   
   ###QUESTION BANK###
-  bank <- read.csv('complete1.csv', stringsAsFactors = FALSE)
+  bank <- read.csv('completeg.csv', stringsAsFactors = FALSE)
   Qs_array <- c(1:nrow(bank))
   value <- reactiveValues(index =  1,
                           mistake = 0,

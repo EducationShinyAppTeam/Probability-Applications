@@ -34,7 +34,7 @@ shinyUI(dashboardPage(
       
       
       menuItem(
-        "Pre-requisites",
+        "Prerequisites",
         tabName = "concepts",
         icon = icon("book")
       ),
