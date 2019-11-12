@@ -428,7 +428,7 @@ shinyUI(dashboardPage(
             wellPanel(style = "background-color: #EAF2F8",
                       uiOutput("question")),
             h4(
-              "Which expression addresses the question?",
+               "Which expression addresses the question?",
               tags$li(
                 style = "display: inline-block;",
                 circleButton(
@@ -456,7 +456,9 @@ shinyUI(dashboardPage(
                   selected = NULL,
                   checkIcon = list(yes = icon("check-square"),
                                    no = icon("square-o")),
-                  choices = list("\\(\\frac{1}{4}\\)",
+                  choices = list(
+                    # "Pick the expression below that best addresses the question.",
+                                 "\\(\\frac{1}{4}\\)",
                                  "\\(\\frac{2}{4}\\)",
                                  "\\(\\frac{3}{4}\\)",
                                  "\\(\\frac{4}{4}\\)"),
