@@ -19,7 +19,7 @@ shinyServer(function(input, output, session) {
     sendSweetAlert(
       session = session,
       title = "Instructions:",
-      text = "Pick a answer and click 'submit' to see if it's right, then click 'next' to continue.",
+      text = "This app quizzes your knowledge of turning probability applications with context into mathematical expressions using a hangman game format.",
       type = "info"
     )
   })

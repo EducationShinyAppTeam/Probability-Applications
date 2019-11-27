@@ -504,7 +504,10 @@ shinyUI(dashboardPage(
                   disabled = FALSE
                 ),
                 offset = 1
-              )
+              ),
+              br(),br(),br(),
+              column(width=12,
+              h5(strong(("CAUTION: If you don't make a selection, the first answer is assumed to be your choice."))))
             ),
             tags$head(
             tags$style(
