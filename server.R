@@ -48,7 +48,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$restart, {
     updateButton(session, "submit", disabled = FALSE)
     updateButton(session, "nextq", disabled = FALSE)
-    updateButton(session, "restart", disabled = TRUE)
+    updateButton(session, "restart", disabled = FALSE)
     Qs <<- nrow(bank)
     Qs_array <<- c(1:Qs)
     id <- 1
