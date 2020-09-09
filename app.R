@@ -1,476 +1,339 @@
 library(shiny)
 library(shinydashboard)
 library(shinyBS)
-library(shinyjs)
 library(shinyWidgets)
 library(boastUtils)
 
-source("helpers.R")
 
+## App Metadata ----
 APP_TITLE <<- "Probability Applications"
+
+## Constants ----
 GAME_OVER <- FALSE
 
-ui <- dashboardPage(
-  skin = "blue",
-  # Title
-  dashboardHeader(
-    title = "Probability Applications",
-    titleWidth = 300,
-    tags$li(
-      class = "dropdown",
-      tags$a(
-        href = "https://shinyapps.science.psu.edu/",
-        icon("home", lib = "font-awesome")
+# Define the UI ----
+ui <- list(
+  dashboardPage(
+    skin = "blue",
+    ## Header ----
+    dashboardHeader(
+      title = "Probability Applications",
+      titleWidth = 250,
+      tags$li(
+        class = "dropdown", actionLink("info", icon("info"))
+      ),
+      tags$li(
+        class = "dropdown", tags$a(
+          href = "https://shinyapps.science.psu.edu/", icon("home")
+        )
       )
     ),
-    tags$li(
-      class = "dropdown",
-      actionLink("info", icon("info"),
-        class =
-          "myClass"
-      )
-    )
-  ),
-  # Sidebar
+  ## Sidebar ----
   dashboardSidebar(
-    width = 300,
+    width = 250,
     sidebarMenu(
       id = "tabs",
-      menuItem(
-        "Prerequisites",
-        tabName = "concepts",
-        icon = icon("book")
-      ),
-      menuItem("Overview", tabName = "information", icon = icon("dashboard")),
-      menuItem("Game", tabName = "test", icon = icon("gamepad"))
+      menuItem("Overview", tabName = "overview", icon = icon("tachometer-alt")),
+      menuItem("Prerequisites", tabName = "concepts", icon = icon("book")),
+      menuItem("Game", tabName = "test", icon = icon("gamepad")),
+      menuItem("References", tabName = "references", icon = icon("leanpub"))
+    ),
+    tags$div(
+      class = "sidebar-logo",
+      boastUtils::psu_eberly_logo("reversed")
     )
   ),
-
-  # Content within the tabs
+  ## Body ----
   dashboardBody(
-    tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "Feature.css")
-    ),
     tabItems(
+      ### Overview page ----
       tabItem(
-        tabName = "information",
-        tags$a(
-          href = "http://stat.psu.edu/",
-          tags$img(src = "PS-HOR-RGB-2C.png", align = "left", width = 180)
-        ),
-        br(),
-        br(),
-        br(),
-
-        h3("About: "),
+        tabName = "overview",
+        h1("Probability Applications"),
         p(
-          "This app quizzes your knowledge of turning probability applications  with context into mathematical expressions using a hangman game format."
+          "This app quizzes your knowledge of turning probability applications
+          with context into mathematical expressions using a hangman game format."
         ),
-        br(),
-        h3("Instructions:"),
+        h2("Instructions"),
         tags$ul(
           tags$li(
-            "You'll start this game with a little man on the top of a tree, and you are trying to prevent his fall to the ground. If you provide a wrong answer, he falls to a lower branch and eventually to the ground. If you get 10 questions correct before he falls to the ground, you have won the game and saved the little man!"
+            "You'll start this game with a little man on the top of a tree, and
+            you are trying to prevent his fall to the ground. If you provide a
+            wrong answer, he falls to a lower branch and eventually to the ground.
+            If you get 10 questions correct before he falls to the ground, you
+            have won the game and saved the little man!"
           ),
           tags$li(
-            "Read the given text before you make your choice. Make sure you understand the scenario text provided."
+            "Read the given text before you make your choice. Make sure you
+            understand the scenario text provided."
           ),
           tags$li(
-            "If you need some extra help, click the 'hint' button (shown as a question mark symbol)."
+            "If you need some extra help, click the 'hint' button (shown as a
+            question mark symbol)."
           ),
-          tags$li("After you select the choice, click 'Submit' to check your answer."),
+          tags$li("After you select the choice, click 'Submit' to check your
+                  answer."),
           tags$li(
-            "Once you click 'Submit', you cannot revise your answer. You can only click 'Next Question' to move on your challenge."
+            "Once you click 'Submit', you cannot revise your answer. You can
+            only click 'Next Question' to move on your challenge."
           )
         ),
-
         div(
           style = "text-align: center;",
           bsButton(
             inputId = "go",
             label = "GO!",
             size = "large",
-            icon = icon("bolt"),
-            class = "circle grow"
+            icon = icon("bolt")
           )
         ),
         br(),
-        h3("Acknowledgements:"),
-        p("This app was developed and coded by Yiyang Wang.")
+        br(),
+        h3("Acknowledgements"),
+        p("This app was developed and coded by Yiyang Wang.",
+          br(),
+          br(),
+          br(),
+          div(class = "updated", "Last Update: 9/8/2020 by NJH.")
+        )
       ),
-
-      #### Pre-requisites Page####
+      ### Prerequisites Page ----
       tabItem(
         tabName = "concepts",
         withMathJax(),
-        fluidRow(div(
-          style = "text-align: center;",
-          h2(
-            "Here are some concepts you may want to review before doing the practice"
+        h2("Prerequisites"),
+        p("Here are some concepts you may want to review before playing the game."),
+        #### Gen Eqn's box ----
+        box(
+          width = 12,
+          title = "General Equations",
+          collapsible = TRUE,
+          collapsed = FALSE,
+          p("Expectation"),
+          p(
+            "\\(\\text{E}\\!\\left[\\sum_i{a_{i}X_{i}}\\right]=
+              \\sum_i{a_{i}\\cdot\\text{E}\\!\\left[X_{i}\\right]}\\)"
+          ),
+          br(),
+          p("Variance and Covariance"),
+          p(
+            "\\(\\text{Var}\\!\\left[aX+b\\right]=
+                  a^2\\cdot\\text{Var}\\!\\left[X\\right]\\)",
+            br(),
+            "\\(\\text{Var}\\!\\left[X\\right]=
+                  \\text{E}\\!\\left[X^2\\right]-
+                  \\big(\\text{E}\\!\\left[X\\right]\\!\\big)^2\\)"
+          ),
+          br(),
+          p("\\(\\text{Cov}\\!\\left(aX,bY\\right)=
+                  ab\\cdot\\text{Cov}\\left(X,Y\\right)\\)",
+            br(),
+            "\\(\\text{Cov}\\!\\left(X,Y\\right)=
+                  \\text{E}\\!\\left[XY\\right]-
+                  \\text{E}\\!\\left[X\\right]\\cdot\\text{E}\\!\\left[Y\\right]\\)"
+          ),
+          br(),
+          p(
+            "\\(\\text{Var}\\!\\left[X+Y\\right]=
+                  \\text{Var}\\!\\left[X\\right]+
+                  \\text{Var}\\!\\left[Y\\right]+
+                  2\\cdot\\text{Cov}\\!\\left(X,Y\\right)\\)",
+            br(),
+            "\\(\\text{Var}\\!\\left[\\sum_{i}X_{i}\\right]=
+                  \\sum_{i}\\text{Var}\\!\\left[X_{i}\\right]+
+                  2\\cdot\\underset{i\\neq j}{\\sum_{i}\\sum_{j}}
+                  \\text{Cov}\\!\\left(X_{i},X_{j}\\right)\\)"
+          ),
+          br(),
+          p("Moment Generating Functions"),
+          p(
+            "\\(M_X(t)=\\text{E}\\!\\left[e^{tX}\\right]\\)",
+            br(),
+            "\\(M'_X(0)=\\text{E}\\!\\left[X\\right]\\)",
+            br(),
+            "\\(M''_X(0)=\\text{E}\\!\\left[X^2\\right]\\)"
+          ),
+          br(),
+          p(
+            "Transformations of Random Variablies using any function, \\(g\\)."
+            ),
+          p(
+            "Discrete Case:
+              \\(\\text{E}\\!\\left[g(X)\\right]=
+              \\sum\\limits_{x\\in\\mathcal{X}}g(x)\\cdot p(x)\\)",
+            br(),
+            "Continuous Case:
+              \\(\\text{E}\\!\\left[g(X)\\right]=
+              \\int\\limits_{\\mathcal{X}}g(x)\\cdot f(x)dx\\)"
           )
-        )),
+        ),
+        #### Discrete Distributions ----
+        h3("Discrete Random Variables"),
+        p("The probability mass function, \\(f\\), and the cumlative
+          probability/density function, \\(F\\), for discrete random variables
+          are \\(f(x)=P\\left[X=x\\right]\\) and \\(F(x)=P\\left[X\\leq x\\right]\\)."
+        ),
+        p("Note: \\(exp\\left(x\\right)=e^{x}\\)"),
         fluidRow(
-          with = 12,
           box(
-            title = strong("General expectation equations"),
-            solidHeader = TRUE,
-            status = "primary",
-            width = 12,
-            background = NULL,
+            title = "Discrete Uniform Distribution",
+            width = 6,
             collapsible = TRUE,
-            column(
-              width = 4,
-              wellPanel(
-                style = "background-color: #d3efff",
-                fluidRow(
-                  width = 12,
-                  style = "text-align:center",
-                  p(
-                    "\\(\\text{E}\\left[\\sum_i{a_{i}X_{i}}\\right]=\\sum_i{a_{i}\\text{E}\\left[X_{i}\\right]}\\)"
-                  ), br(),
-                  p(
-                    "\\(\\text{Var}\\left[aX+b\\right]=a^2\\text{Var}\\left[X\\right]\\)"
-                  ),
-                  p(
-                    "\\(\\text{Var}\\left[X\\right]=\\text{E}\\left[X^2\\right]-\\left(\\text{E}\\left[X\\right]\\right)^2\\)"
-                  ), br(),
-                  p("\\(\\text{Cov}(aX,bY)=ab\\text{Cov}(X,Y)\\)"),
-                  p(
-                    "\\(\\text{Cov}(X,Y)=\\text{E}\\left[XY\\right]-\\text{E}\\left[X\\right]\\cdot\\text{E}\\left[Y\\right]\\)"
-                  ), br()
-                )
-              )
-            ),
-            column(
-              width = 8,
-              wellPanel(
-                style = "background-color: #d3efff",
-                fluidRow(
-                  width = 12,
-                  style = "text-align:center",
-                  p(
-                    "\\(\\text{Var}\\left[X+Y\\right]=\\text{Var}\\left[X\\right]+\\text{Var}\\left[Y\\right]+2\\text{Cov}\\left(X,Y\\right)\\)"
-                  ),
-                  p(
-                    "\\(\\text{Var}\\left[\\sum_{i}X_{i}\\right]=\\sum_{i}\\text{Var}\\left[X_{i}\\right]+2\\underset{i\\neq j}{\\sum_{i}\\sum_{j}}\\text{Cov}\\left(X_{i},X_{j}\\right)\\)"
-                  )
-                ),
-                fluidRow(
-                  width = 12,
-                  style = "text-align:center",
-                  column(
-                    width = 4,
-                    p(
-                      "\\(M_X(t)=\\text{E}\\left[e^{tX}\\right]\\)"
-                    )
-                  ),
-                  column(
-                    width = 4,
-                    p(
-                      "\\(M'_X(0)=\\text{E}\\left[X\\right]\\)"
-                    )
-                  ),
-                  column(
-                    width = 4,
-                    p(
-                      "\\(M''_X(0)=\\text{E}\\left[X^2\\right]\\)"
-                    )
-                  )
-                ),
-                p(
-                  "Transformations of Random Variablies using any function, \\(g\\)."
-                ),
-                p(
-                  "Discrete Case: \\(\\text{E}\\left[g(X)\\right]=\\sum\\limits_{x\\in\\mathcal{X}}g(x)p(x)\\)"
-                ),
-                p(
-                  "Continuous Case:  \\(\\text{E}\\left[g(X)\\right]=\\int\\limits_{\\mathcal{X}}g(x)f(x)dx\\)"
-                )
-              )
-            )
+            collapsed = TRUE,
+            p("On the set \\(\\{x_i,i = 1, 2, \\ldots, k\\}\\),"),
+            p("\\(P[X=x_{i}]=1\\big/k\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=\\left(k+1\\right)\\!\\big/2\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=\\left(k^{2}-1\\right)\\!\\big/12\\)"),
+            p("\\(M_{X}(t)=\\left(\\sum\\limits^{k}_{i=1}exp\\left(it\\right)\\right)
+            \\!\\big/k\\)")
+          ),
+          box(
+            title = "Poisson Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With the parameter \\(0\\leq\\lambda<\\infty\\),"),
+            p("\\(P[X=x]=\\left(exp\\left(-\\lambda\\right)\\cdot\\lambda^{x}\\right)
+            \\big/x!\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=\\lambda\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=\\lambda\\)"),
+            p("\\(M_{X}(t)=
+            exp\\left(\\lambda\\left(exp\\left(t\\right)-1\\right)\\right)\\)"),
+            br(),
+            br()
           )
         ),
-        box(
-          title = strong("Discrete random variable"),
-          solidHeader = TRUE,
-          status = "primary",
-          width = 6,
-          background = NULL,
-          collapsible = TRUE,
-          wellPanel(
-            style = "background-color: #d3efff",
-            fluidRow(
-              style = "text-align:center",
-              width = 12,
-              column(
-                width = 6,
-                p("$$ f(x)	=	P(X=x)$$")
-              ),
-              column(
-                width = 6,
-                p("$$ F(x) =	P[X≤x]$$")
-              )
-            )
+        fluidRow(
+          box(
+            title = "Bernoulli Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With parameter \\(0\\leq\\theta\\leq1\\),"),
+            p("\\(P[X=x]=\\theta^{x}\\left(1-\\theta\\right)^{1-x}\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=\\theta\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=\\theta\\left(1-\\theta\\right)\\)"),
+            p("\\(M_{X}(t)=\\left(1-\\theta\\right)+\\theta\\cdot exp\\left(t\\right)\\)")
           ),
-          wellPanel(
-            style = "background-color: #d3efff",
-            h5(
-              strong("Discrete Uniform distribution on the set\\(\\{x_{i},\\;i=1,2,\\ldots,k\\}\\)")
-            ),
-            fluidRow(
-              width = 12,
-              style = "text-align:center",
-              column(
-                width = 6,
-
-                p("$$P[X=x_{i}]=1/k$$"),
-                p("$$Var(X)=(k^{2}-1)/12$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)=\\frac{k+1}{2}$$")
-              )
-            )
-          ),
-          wellPanel(
-            style = "background-color: #d3efff",
-            h5(
-              strong("Bernoulli random variable with parameter θ:")
-            ),
-            fluidRow(
-              width = 12,
-              style = "text-align:center",
-              column(
-                width = 6,
-
-                p("$$f(x) =\\theta^{x}(1-θ)^{1-x}$$"),
-                p("$$Var(X)	=	n\\theta(1−\\theta)$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)	=	n\\theta$$"),
-                p("$$Mx(t)	=	(1-\\theta) + θe^{t}$$")
-              )
-            )
-          ),
-          wellPanel(
-            style = "background-color: #d3efff",
-            h5(
-              strong("Binomial random variable with parameters n and θ:")
-            ),
-            fluidRow(
-              style = "text-align:center",
-              width = 12,
-              column(
-                width = 6,
-                p("$$f(x) =	[n!/x!(n-x)!]θ^{x}(1-θ)^{n-x}$$"),
-                p("$$Var(X)	=	n^{θ}(1−θ)$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)	=	n^θ$$"),
-                p("$$Mx(t)	=	[(1-\\theta) + θe^{t}]^n$$")
-              )
-            )
-          ),
-          wellPanel(
-            style = "background-color: #d3efff",
-            h5(
-              strong("Geometric random variable with parameter θ:")
-            ),
-            fluidRow(
-              style = "text-align:center",
-              width = 12,
-              column(
-                width = 6,
-                p("$$f(x) =θ(1-θ)^{x-1}$$"),
-                p("$$Var(X)	=	\\frac{(1-θ)}{θ^{2}}$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)	=	\\frac{1}{θ}$$"),
-                p("$$Mx(t)	=	\\frac{θe^{t}}{[1-(1-θ)e^{t}]}$$")
-              )
-            )
-          ),
-          # Negative Bionomial
-          wellPanel(
-            style = "background-color: #d3efff",
-            tags$style(
-              type = "text/css",
-              "#question {background-color: #EAF2F8;color: black;}",
-              ".well { padding: 10px; margin-bottom: 15px; max-width: 2000px; }"
-            ),
-            h5(strong("Negative Bionomial random variable with parameters r and θ:")),
-            fluidRow(
-              width = 12,
-              style = "text-align:center",
-              column(
-                width = 6,
-                p("$$f(x) =\\frac{(x-1)!}{(r-1)!(x-r)!}$$"),
-                p("$$Var(X)	=	\\frac{r(1-θ)}{θ^{2}}$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)	=	\\frac{r}{θ}$$"),
-                p("$$Mx(t)	=	(\\frac{θe^{t}}{1-(1-θ)e^{t}})^r$$")
-              )
-            )
-          ),
-          # Poisson
-          wellPanel(
-            style = "background-color: #d3efff",
-            tags$style(
-              type = "text/css",
-              "#question {background-color: #EAF2F8;color: black;}",
-              ".well { padding: 10px; margin-bottom: 15px; max-width: 2000px; }"
-            ),
-            h5(strong("Poisson random variable with parameter λ:")),
-            fluidRow(
-              width = 12,
-              style = "text-align:center",
-              column(
-                width = 6,
-                p("$$f(x) = (\\frac{λ^{x}}{x!})e^{-λ}$$"),
-                p("$$Var(X)	=	λ$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)	=	λ$$"),
-                p("$$Mx(t)	=	exp{λ(e^{t}-1)}$$")
-              )
-            )
+          box(
+            title = "Binomial Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With parameter \\(0\\leq\\theta\\leq1\\) and \\(n\\),"),
+            p("\\(P[X=x]={n\\choose x}\\theta^{x}\\left(1-\\theta\\right)^{n-x}\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=n\\theta\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=n\\theta\\left(1-\\theta\\right)\\)"),
+            p("\\(M_{X}(t)=\\left(\\theta\\cdot exp\\left(t\\right)+
+            \\left(1-\\theta\\right)\\right)^n\\)")
           )
         ),
-        box(
-          title = strong("Continuous random variable"),
-          solidHeader = TRUE,
-          status = "primary",
-          width = 6,
-          background = NULL,
-          collapsible = TRUE,
-          wellPanel(
-            style = "background-color: #d3efff",
-            fluidRow(
-              width = 12,
-              style = "text-align:center",
-              column(
-                width = 6,
-                p("$$ f(x)	=	P(X=x)$$")
-              ),
-              column(
-                width = 6,
-                p("$$ F(a) = P(X≤a) = {∫^{a}_{−∞}}f(x)dx$$")
-              )
-            )
+        fluidRow(
+          box(
+            title = "Geometric Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With parameter \\(0\\leq\\theta\\leq 1\\),"),
+            p("\\(P[X=x]=\\theta\\left(1-\\theta\\right)^{x-1}\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=1\\big/\\theta\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=
+            \\left(1-\\theta\\right)\\!\\big/\\theta^2\\)"),
+            p("\\(M_{X}(t)=\\left(\\theta\\cdot exp\\left(t\\right)\\right)
+            \\!\\big/\\left(1-\\left(1-\\theta\\right)exp\\left(t\\right)\\right)\\)")
           ),
-          wellPanel(
-            style = "background-color: #d3efff",
-            h5(
-              strong("Uniform random variable between A and B:")
-            ),
-            fluidRow(
-              style = "text-align:center",
-              width = 12,
-              column(
-                width = 6,
-                p("$$f(x) =	\\frac{1}{(B-A)}$$"),
-                p("$$	Var(X)	=	\\frac{(B-A)^{2}}{12}	$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)	=	\\frac{(A+B)}{2}$$"),
-                p("$$Mx(t)	=\\frac{(e^{tB}- e^{tA})}{t(B-A)}$$")
-              )
-            )
+          box(
+            title = "Negative Binomial Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With parameter \\(0\\leq\\theta\\leq1\\) and \\(r\\),"),
+            p("\\(P[X=x]={{r+x-1}\\choose{x}}\\theta^r\\left(1-\\theta\\right)^x\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=\\left(r\\left(1-\\theta\\right)\\right)
+            \\!\\big/\\theta\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=\\left(r\\left(1-\\theta\\right)\\right)
+            \\!\\big/\\theta^2\\)"),
+            p("\\(M_{X}(t)=\\left[\\left(\\theta \\cdot exp\\left(t\\right)\\right)
+            \\!\\big/\\left(1-\\left(1-\\theta\\right)\\cdot exp\\left(t\\right)
+            \\right)\\right]^r\\)")
+          )
+        ),
+        ### Continuous Distributions ----
+        h3("Continuous Random Variables"),
+        p("For a probability density function, \\(f\\), the cumulative
+          density/probability function, \\(F\\), is defined as
+          \\(F(a)=P\\left[X\\leq a\\right]=\\int\\limits_{-\\infty}^af(x)dx\\)."),
+        fluidRow(
+          box(
+            title = "Continuous Uniform Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With parameters \\(A\\) and \\(B\\) such that \\(A\\leq x\\leq B\\),"),
+            p("\\(f(x)=1\\!\\big/\\left(B-A\\right)\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=\\left(A + B\\right)
+              \\!\\big/2\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=\\left(B-A\\right)^2
+            \\!\\big/12\\)"),
+            p("\\(M_{X}(t)=\\frac{exp\\left(Bt\\right)-exp\\left(At\\right)}
+              {\\left(B-A\\right)t}\\)")
           ),
-          wellPanel(
-            style = "background-color: #d3efff",
-            h5(
-              strong("Normal random variable 	with	mean µ and standard	deviation σ:")
-            ),
-            fluidRow(
-              style = "text-align:center",
-              width = 12,
-              column(
-                width = 6,
-                p(
-                  "$$φ(x)=\\frac{1}{σ\\sqrt{2\\pi}}exp{[\\frac{-(x-µ)^2}{2σ^2}]}$$"
-                ),
-                p("$$	Var(X)	=	σ^2	$$")
+          box(
+            title = "Normal (Gaussian) Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With parameters \\(\\mu\\) and \\(\\sigma^2>0\\),"),
+            p("\\(f(x)=\\frac{1}{\\sqrt[2]{2\\pi\\sigma^2}}\\cdot
+              exp\\left(\\frac{-\\left(x-\\mu\\right)^2}{2\\sigma^2}\\right)\\)",
+              br(),
+              "(also sometimes called \\(\\phi\\))"
               ),
-              column(
-                width = 6,
-                p("$$E(X)	=	µ	$$"),
-                p("$$Mx(t) = exp(µt + 0.5(σt)^2$$")
-              )
-            )
+            p("\\(\\text{E}\\!\\left[X\\right]=\\mu\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=\\sigma^2\\)"),
+            p("\\(M_{X}(t)=exp\\left(\\mu t + \\frac{\\sigma^2t^2}{2}\\right)\\)")
+          )
+        ),
+        fluidRow(
+          box(
+            title = "Exponential Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With parameter \\(\\lambda >0\\),"),
+            p("\\(f(x)=\\lambda\\cdot exp\\left(-\\lambda x\\right)\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=1\\!\\big/\\lambda\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=1\\!\\big/\\lambda^2\\)"),
+            p("\\(M_{X}(t)=\\lambda\\big/\\left(\\lambda-t\\right)\\)"),
+            footer = "Note: Can also be parameterized with \\(\\beta = 1/\\lambda\\)"
           ),
-          wellPanel(
-            style = "background-color: #d3efff",
-            h5(
-              strong("Exponential random variable with parameter λ:")
-            ),
-            fluidRow(
-              style = "text-align:center",
-              width = 12,
-              column(
-                width = 6,
-                p("$$f(x) = λe^{-λx}$$"),
-                p("$$	Var(X)	=	\\frac{1}{λ^{2}}	$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)	=	\\frac{1}{λ}$$"),
-                p("$$Mx(t)	=\\frac{λ}{(λ-t)}$$")
-              )
-            )
-          ),
-          wellPanel(
-            style = "background-color: #d3efff",
-            tags$style(
-              type = "text/css",
-              "#question {background-color: #EAF2F8;color: black;}",
-              ".well { padding: 10px; margin-bottom: 15px; max-width: 2000px; }"
-            ),
-            h5(strong("Gamma random variable with parameters λ and α:")),
-            fluidRow(
-              width = 12,
-              style = "text-align:center",
-              column(
-                width = 6,
-                p("$$f(x) =	\\frac{λe^{-λx}(λx)^{α-1}}{Γ(α)}$$"),
-                p("$$Var(X)	=	\\frac{α}{λ^{2}}$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)	=	\\frac{α}{λ}$$"),
-                p("$$Mx(t)	=	[\\frac{λ}{(λ-t)}]^{α}$$")
-              )
-            )
-          ),
-          wellPanel(
-            style = "background-color: #d3efff",
-            tags$style(
-              type = "text/css",
-              "#question {background-color: #EAF2F8;color: black;}",
-              ".well { padding: 10px; margin-bottom: 15px; max-width: 2000px; }"
-            ),
-            h5(strong("Chi-square random	variable	with	k	degrees	of freedom:")),
-            fluidRow(
-              width = 12,
-              style = "text-align:center",
-              column(
-                width = 6,
-                p("$$f(x) =	\\frac{0.5e^{\\frac{-x}{2}}(0.5x)^{\\frac{k-2}{2}}}{Γ(k/2)}$$"),
-                p("$$Var(X)	=	2k$$")
-              ),
-              column(
-                width = 6,
-                p("$$E(X)	=	k$$"),
-                p("$$Mx(t)	=	{1-2t}^{\\frac{-k}{2}}$$")
-              )
-            )
+          box(
+            title = "Gamma Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With parameters \\(\\alpha > 0\\) and \\(\\lambda > 0\\),"),
+            p("\\(f(x)=\\left(\\lambda^{\\alpha}\\cdot x^{\\alpha-1}\\cdot
+              exp\\left(-x\\lambda\\right)\\right)\\!\\big/{\\Gamma(\\alpha)}\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=\\alpha\\big/\\lambda\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=\\alpha\\big/\\lambda^2\\)"),
+            p("\\(M_{X}(t)=\\left(\\lambda\\big/
+              \\left(\\lambda-t\\right)\\right)^{\\alpha}\\)"),
+            footer = "Note: Can also be parameterized with \\(\\beta = 1/\\lambda\\)"
+          )
+        ),
+        fluidRow(
+          box(
+            title = "\\(\\chi^2\\) (Chi-squared) Distribution",
+            width = 6,
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("With parameter \\(k \\geq 1\\) and an integer,"),
+            p("\\(f(x)=\\left(x^{k/2}\\cdot exp\\left(-x/2\\right)\\right)\\!\\big/
+              \\left(\\Gamma(k/2)\\cdot 2^{k/2}\\right)\\)"),
+            p("\\(\\text{E}\\!\\left[X\\right]=k\\)"),
+            p("\\(\\text{Var}\\!\\left[X\\right]=2k\\)"),
+            p("\\(M_{X}(t)=\\left(1\\!\\big/\\left(1-2t\\right)\\right)^{k/2}\\)")
           )
         ),
         br(),
@@ -480,133 +343,141 @@ ui <- dashboardPage(
             inputId = "ready",
             label = "I'm ready!",
             size = "large",
-            icon = icon("bolt"),
-            class = "circle grow"
+            icon = icon("bolt")
           )
         )
       ),
-
-      ###### Game Page #######
+      ## Game Page ----
       tabItem(
         tabName = "test",
         withMathJax(),
-        sidebarLayout(
-          sidebarPanel(
-            h3("Challenge"),
-            wellPanel(
-              style = "background-color: #EAF2F8",
-              uiOutput("question")
-            ),
-            p(
-              "Which expression addresses the question?",
-              tags$li(
-                style = "display: inline-block;",
-                circleButton(
-                  "hint",
-                  icon = icon("question"),
-                  status = "myClass",
-                  size = "xs"
-                )
-              )
-            ),
-            wellPanel(
-              style = "background-color: #EAF2F8",
-              width = 8,
-
-              fluidRow(
-                # style = "text-align:center",
-                width = 12,
-                withMathJax(),
-                column(12,
-                  offset = 0,
-                  radioGroupButtons(
-                    inputId = "mc1",
-                    label = NULL,
-                    status = "game",
-                    direction = "vertical",
-                    selected = NULL,
-                    checkIcon = list(
-                      yes = icon("check-square"),
-                      no = icon("square-o")
-                    ),
-                    choices = list(
-                      # "Pick the expression below that best addresses the question.",
-                      "\\(\\frac{1}{4}\\)",
-                      "\\(\\frac{2}{4}\\)",
-                      "\\(\\frac{3}{4}\\)",
-                      "\\(\\frac{4}{4}\\)"
-                    ),
-                    width = "100%",
-                    justified = FALSE,
-                    individual = FALSE
-                  )
-                )
-              ),
-              uiOutput("test1"),
-              uiOutput("test2")
-            ),
-            fluidRow(
-              width = 12,
-              column(1, uiOutput("mark")),
-              column(
-                1,
-                bsButton(
-                  "submit",
-                  "   Submit   ",
-                  size = "large",
-                  style = "warning",
-                  disabled = FALSE
-                ),
-                offset = 0
-              ),
-              column(3,
-                bsButton(
-                  "nextq",
-                  "Next Question",
-                  size = "large",
-                  style = "success",
-                  disabled = TRUE
-                ),
-                offset = 2
-              ),
-              column(
-                3,
-                bsButton(
-                  "restart",
-                  "Restart",
-                  size = "large",
-                  style = "warning",
-                  disabled = FALSE
-                ),
-                offset = 1
-              ),
-              br(), br(), br(),
-              column(
-                width = 12,
-                h5(strong(("CAUTION: If you don't make a selection, the first answer is assumed to be your choice.")))
-              )
-            ),
-            tags$head(
-              tags$style(
-                HTML("#result {font-size: 17px;background-color:#EAF2F8}")
-              )
-            ),
-            width = 6
-          ),
-          mainPanel(
-            br(),
+        h2("Probability Application Game"),
+        p("Exam the given context and then select the expression that addresses
+          the context's question."),
+        fluidRow(
+          column(
             width = 6,
-            fluidRow(uiOutput("correct", align = "center")),
-            br(),
-            br(),
-            fluidRow(uiOutput("distPlot", align = "center"))
+            wellPanel(
+              h3("Context"),
+              uiOutput("question"),
+              br(),
+              bsButton(
+                inputId = "hint",
+                label = "Hint",
+                icon = icon("question"),
+                size = "large"
+              ),
+              br(),
+              radioGroupButtons(
+                inputId = "mc1",
+                label = "Which expression addresses the question?",
+                status = "game",
+                direction = "vertical",
+                selected = character(0),
+                checkIcon = list(
+                  yes = icon("check-square"),
+                  no = icon("square-o")
+                ),
+                choices = list(
+                  # "Pick the expression below that best addresses the question.",
+                  "\\(\\frac{1}{4}\\)",
+                  "\\(\\frac{2}{4}\\)",
+                  "\\(\\frac{3}{4}\\)",
+                  "\\(\\frac{4}{4}\\)"
+                ),
+                width = "100%",
+                justified = FALSE,
+                individual = FALSE
+              ),
+              br(),
+              fluidRow(
+                column(
+                  width = 3,
+                  bsButton(
+                    inputId = "submit",
+                    label = "Submit",
+                    size = "large",
+                    style = "default",
+                    disabled = FALSE
+                  )
+                ),
+                column(
+                  width = 4,
+                  uiOutput("mark")
+                )
+              ),
+              br(),
+              bsButton(
+                inputId = "nextq",
+                label = "Next Question",
+                size = "large",
+                style = "default",
+                disabled = TRUE
+              ),
+              br(),
+              bsButton(
+                "restart",
+                "Restart",
+                size = "large",
+                style = "danger",
+                disabled = FALSE
+              )
+            )
+          ),
+          column(
+            width = 6,
+            uiOutput("correct", align = "center"),
+            uiOutput("distPlot", align = "center")
           )
-        )
+        ),
+        uiOutput("math1"),
+        uiOutput("math2")
+      ),
+      tabItem(
+        ### References ----
+        tabName = "references",
+        h2("References"),
+        p(
+          class = "hangingindent",
+          "Bailey, E. (2015). shinyBS: Twitter Bootstrap Components
+                      for Shiny. R package version 0.61. Available from
+                      https://CRAN.R-project.org/package=shinyBS"
+        ),
+        p(
+          class = "hangingindent",
+          "Carey, R. and Hatfield, N. (2020). boastUtils:
+                      BOAST Utilities. R package version 0.1.6.3. Available from
+                      https://github.com/EducationShinyAppTeam/boastUtils"
+        ),
+        p(
+          class = "hangingindent",
+          "Chang, W. and Borges Ribeiro, B. (2018). shinydashboard:
+                      Create Dashboards with 'Shiny'. R package version 0.7.1.
+                      Available from https://CRAN.R-project.org/package=shinydashboard"
+        ),
+        p(
+          class = "hangingindent",
+          "Chang, W., Cheng, J., Allaire, J., Xie, Y., and
+                      McPherson, J. (2020). shiny: Web Application Framework for
+                      R. R package version 1.5.0. Available from
+                      https://CRAN.R-project.org/package=shiny"
+        ),
+        p(
+          class = "hangingindent",
+          "Perrier, V., Meyer, F., and Granjon, D. (2020). shinyWidgets:
+                      Custom Inputs Widgets for Shiny. R package version 0.5.3.
+                      Available from https://CRAN.R-project.org/package=shinyWidgets"
+        ),
+        br(),
+        br(),
+        br(),
+        boastUtils::copyrightInfo()
       )
     )
   )
 )
-
+)
+# Define the server ---
 server <- function(input, output, session) {
   ### Variables starting value###
   selected <<- c()
@@ -637,7 +508,7 @@ server <- function(input, output, session) {
 
     statement <- rlocker::createStatement(stmt)
     response <- rlocker::store(session, statement)
-    
+
     return(response)
   }
 
@@ -699,10 +570,10 @@ server <- function(input, output, session) {
     Qs <<- nrow(bank)
     Qs_array <<- c(1:Qs)
     id <- 1
-    
+
     GAME_OVER <<- FALSE
     .generateStatement(session, object = "restart", verb = "interacted", description = "Game has been restarted.")
-    
+
     output$question <- renderUI({
       withMathJax()
       hint <<- withMathJax(bank[id, 3])
@@ -715,21 +586,21 @@ server <- function(input, output, session) {
         bank[id, "C"],
         bank[id, "D"]
       ),
-      selected = NULL,
+      selected = character(0),
       checkIcon = list(
         yes = icon("check-square"),
         no = icon("square-o")
       ),
       status = "game"
     )
-    output$test1 <- renderUI({
+    output$math1 <- renderUI({
       withMathJax()
     })
-    output$test2 <- renderUI({
+    output$math2 <- renderUI({
       withMathJax()
     })
     output$mark <- renderUI({
-      img(src = NULL, width = 30)
+      img(src = NULL, width = 50)
     })
     value[["mistake"]] <<- 0
     value$correct <<- 0
@@ -740,7 +611,8 @@ server <- function(input, output, session) {
     id <<- sample(Qs_array, 1, replace = FALSE, prob = NULL)
     Qs_array <<- Qs_array[!Qs_array %in% id]
     updateRadioGroupButtons(session, "mc1",
-      selected = NULL, choices = list(
+      selected = character(0),
+      choices = list(
         bank[id, "A"],
         bank[id, "B"],
         bank[id, "C"],
@@ -752,10 +624,10 @@ server <- function(input, output, session) {
       ),
       status = "game"
     )
-    output$test1 <- renderUI({
+    output$math1 <- renderUI({
       withMathJax()
     })
-    output$test2 <- renderUI({
+    output$math2 <- renderUI({
       withMathJax()
     })
     hint <<- withMathJax(bank[id, 3])
@@ -774,7 +646,8 @@ server <- function(input, output, session) {
           return(withMathJax(bank[id, 2]))
         })
         updateRadioGroupButtons(session, "mc1",
-          selected = NULL, choices = list(
+          selected = character(0),
+          choices = list(
             bank[id, "A"],
             bank[id, "B"],
             bank[id, "C"],
@@ -786,14 +659,14 @@ server <- function(input, output, session) {
           ),
           status = "game"
         )
-        output$test1 <- renderUI({
+        output$math1 <- renderUI({
           withMathJax()
         })
-        output$test2 <- renderUI({
+        output$math2 <- renderUI({
           withMathJax()
         })
         output$mark <- renderUI({
-          img(src = NULL, width = 30)
+          img(src = NULL, width = 50)
         })
       })
     }
@@ -807,7 +680,8 @@ server <- function(input, output, session) {
         })
         updateButton(session, "submit", disabled = FALSE)
         updateRadioGroupButtons(session, "mc1",
-          selected = NULL, choices = list(
+          selected = character(0),
+          choices = list(
             bank[id, "A"],
             bank[id, "B"],
             bank[id, "C"],
@@ -819,14 +693,14 @@ server <- function(input, output, session) {
           ),
           status = "game"
         )
-        output$test1 <- renderUI({
+        output$math1 <- renderUI({
           withMathJax()
         })
-        output$test2 <- renderUI({
+        output$math2 <- renderUI({
           withMathJax()
         })
         output$mark <- renderUI({
-          img(src = NULL, width = 30)
+          img(src = NULL, width = 50)
         })
       })
     }
@@ -845,7 +719,8 @@ server <- function(input, output, session) {
         return(NULL)
       })
       updateRadioGroupButtons(session, "mc1",
-        selected = NULL, choices = list(
+        selected = character(0),
+        choices = list(
           bank[id, "A"],
           bank[id, "B"],
           bank[id, "C"],
@@ -857,10 +732,10 @@ server <- function(input, output, session) {
         ),
         status = "game"
       )
-      output$test1 <- renderUI({
+      output$math1 <- renderUI({
         withMathJax()
       })
-      output$test2 <- renderUI({
+      output$math2 <- renderUI({
         withMathJax()
       })
     }
@@ -870,8 +745,12 @@ server <- function(input, output, session) {
   observeEvent(input$submit, {
     cAnswer <- bank[id, 10]
     WIN <- FALSE
-    success <- input$mc1 == cAnswer
-    
+    if(!is.null(input$mc1) || length(input$mc1) != 0){
+      success <- input$mc1 == cAnswer
+    } else {
+      success <- FALSE
+    }
+
     if (success) {
       # print("correct")
       value$correct <- value$correct + 1
@@ -914,7 +793,7 @@ server <- function(input, output, session) {
         updateButton(session, "nextq", disabled = FALSE)
       }
     }
-    
+
     .generateAnsweredStatement(
       session,
       object = "submit",
@@ -925,7 +804,7 @@ server <- function(input, output, session) {
       success = success,
       completion = GAME_OVER
     )
-    
+
     if (GAME_OVER) {
       if (WIN) {
         .generateStatement(session, object = "game", verb = "completed", description = "Player has won the game.")
@@ -933,19 +812,23 @@ server <- function(input, output, session) {
         .generateStatement(session, object = "game", verb = "completed", description = "Player has lost the game.")
       }
     }
-    
+
     output$mark <- renderUI({
-      if (input$mc1 == cAnswer) {
-        img(src = "check.png", width = 30)
+      if(!is.null(input$mc1) || length(input$mc1) != 0) {
+        if (input$mc1 == cAnswer) {
+          img(src = "check.png", width = 50, alt = "Correct.")
+        } else {
+          img(src = "cross.png", width = 50, alt = "Incorrect")
+        }
       } else {
-        img(src = "cross.png", width = 30)
+        img(src = "cross.png", width = 50, alt = "Incorrect")
       }
     })
   })
 
   #### PRINT NUMBER OF CORRECT ANSWERS####
   output$correct <- renderUI({
-    h3("Number of correct answers:", "", value$correct)
+    paste("Number of correct answers:", value$correct)
   })
 
   ### PRINT HINTS###
@@ -964,23 +847,35 @@ server <- function(input, output, session) {
   output$distPlot <- renderUI({
     img(src = "Cell01.jpg")
     if (value[["mistake"]] == 0) {
-      img(src = "Cell01.jpg")
-    }
-
-    else if (value[["mistake"]] == 1) {
-      img(src = "Cell02.jpg")
-    }
-
-    else if (value[["mistake"]] == 2) {
-      img(src = "Cell03.jpg")
-    }
-
-    else if (value[["mistake"]] == 3) {
-      img(src = "Cell04.jpg")
-    }
-
-    else if (value[["mistake"]] == 4) {
-      img(src = "Cell05.jpg")
+      img(
+        src = "Cell01.jpg",
+        width = "100%",
+        alt = "The man is on the top branch"
+      )
+    } else if (value[["mistake"]] == 1) {
+      img(
+        src = "Cell02.jpg",
+        width = "100%",
+        alt = "The man has fallen one branch"
+      )
+    } else if (value[["mistake"]] == 2) {
+      img(
+        src = "Cell03.jpg",
+        width = "100%",
+        alt = "The man has fallen another branch, only one remaining"
+      )
+    } else if (value[["mistake"]] == 3) {
+      img(
+        src = "Cell04.jpg",
+        width = "100%",
+        alt = "The man has fallen to the last branch"
+      )
+    } else if (value[["mistake"]] == 4) {
+      img(
+        src = "Cell05.jpg",
+        width = "100%",
+        alt = "The man has fallen to the ground"
+      )
     }
   })
 }
