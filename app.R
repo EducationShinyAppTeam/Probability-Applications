@@ -94,7 +94,7 @@ ui <- list(
           br(),
           br(),
           br(),
-          div(class = "updated", "Last Update: 9/8/2020 by NJH.")
+          div(class = "updated", "Last Update: 9/14/2020 by NJH.")
         )
       ),
       ### Prerequisites Page ----
@@ -141,7 +141,7 @@ ui <- list(
             br(),
             "\\(\\text{Var}\\!\\left[\\sum_{i}X_{i}\\right]=
                   \\sum_{i}\\text{Var}\\!\\left[X_{i}\\right]+
-                  2\\cdot\\underset{i\\neq j}{\\sum_{i}\\sum_{j}}
+                  2\\cdot\\underset{i<j}{\\sum_{i}\\sum_{j}}
                   \\text{Cov}\\!\\left(X_{i},X_{j}\\right)\\)"
           ),
           br(),
@@ -170,7 +170,7 @@ ui <- list(
         #### Discrete Distributions ----
         h3("Discrete Random Variables"),
         p("The probability mass function, \\(f\\), and the cumlative
-          probability/density function, \\(F\\), for discrete random variables
+          density function (CDF), \\(F\\), for discrete random variables
           are \\(f(x)=P\\left[X=x\\right]\\) and \\(F(x)=P\\left[X\\leq x\\right]\\)."
         ),
         p("Note: \\(exp\\left(x\\right)=e^{x}\\)"),
@@ -182,6 +182,7 @@ ui <- list(
             collapsed = TRUE,
             p("On the set \\(\\{x_i,i = 1, 2, \\ldots, k\\}\\),"),
             p("\\(P[X=x_{i}]=1\\big/k\\)"),
+            p("in the spacial case where \\(x_i=i\\)"),
             p("\\(\\text{E}\\!\\left[X\\right]=\\left(k+1\\right)\\!\\big/2\\)"),
             p("\\(\\text{Var}\\!\\left[X\\right]=\\left(k^{2}-1\\right)\\!\\big/12\\)"),
             p("\\(M_{X}(t)=\\left(\\sum\\limits^{k}_{i=1}exp\\left(it\\right)\\right)
@@ -199,6 +200,7 @@ ui <- list(
             p("\\(\\text{Var}\\!\\left[X\\right]=\\lambda\\)"),
             p("\\(M_{X}(t)=
             exp\\left(\\lambda\\left(exp\\left(t\\right)-1\\right)\\right)\\)"),
+            br(),
             br(),
             br()
           )
@@ -261,7 +263,7 @@ ui <- list(
         ### Continuous Distributions ----
         h3("Continuous Random Variables"),
         p("For a probability density function, \\(f\\), the cumulative
-          density/probability function, \\(F\\), is defined as
+          density function (CDF), \\(F\\), is defined as
           \\(F(a)=P\\left[X\\leq a\\right]=\\int\\limits_{-\\infty}^af(x)dx\\)."),
         fluidRow(
           box(
@@ -287,7 +289,8 @@ ui <- list(
             p("\\(f(x)=\\frac{1}{\\sqrt[2]{2\\pi\\sigma^2}}\\cdot
               exp\\left(\\frac{-\\left(x-\\mu\\right)^2}{2\\sigma^2}\\right)\\)",
               br(),
-              "(also sometimes called \\(\\phi\\))"
+              "(also sometimes called \\(\\phi\\)
+              with the CDF called \\(\\Phi\\))"
               ),
             p("\\(\\text{E}\\!\\left[X\\right]=\\mu\\)"),
             p("\\(\\text{Var}\\!\\left[X\\right]=\\sigma^2\\)"),

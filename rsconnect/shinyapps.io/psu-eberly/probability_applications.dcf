@@ -5,6 +5,8 @@ account: psu-eberly
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1462655
-bundleId: 2584677
+bundleId: 3628390
 url: https://psu-eberly.shinyapps.io/probability_applications/
-when: 1573603295.74118
+when: 1600108482.66814
+asMultiple: FALSE
+asStatic: FALSE
