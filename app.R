@@ -169,8 +169,8 @@ ui <- list(
         ),
         #### Discrete Distributions ----
         h3("Discrete Random Variables"),
-        p("The probability mass function, \\(f\\), and the cumlative
-          density function (CDF), \\(F\\), for discrete random variables
+        p("The probability mass function, \\(f\\), and the cumulative
+          distribution function (CDF), \\(F\\), for discrete random variables
           are \\(f(x)=P\\left[X=x\\right]\\) and \\(F(x)=P\\left[X\\leq x\\right]\\)."
         ),
         p("Note: \\(exp\\left(x\\right)=e^{x}\\)"),
@@ -263,7 +263,7 @@ ui <- list(
         ### Continuous Distributions ----
         h3("Continuous Random Variables"),
         p("For a probability density function, \\(f\\), the cumulative
-          density function (CDF), \\(F\\), is defined as
+          distribution function (CDF), \\(F\\), is defined as
           \\(F(a)=P\\left[X\\leq a\\right]=\\int\\limits_{-\\infty}^af(x)dx\\)."),
         fluidRow(
           box(
