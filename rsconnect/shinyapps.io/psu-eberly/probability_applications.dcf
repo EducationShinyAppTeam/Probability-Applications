@@ -1,12 +1,10 @@
-name: probability_applications
+name: Probability_Applications
 title:
 username:
 account: psu-eberly
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1462655
-bundleId: 3628421
+bundleId: 3960309
 url: https://psu-eberly.shinyapps.io/probability_applications/
-when: 1600109142.62544
-asMultiple: FALSE
-asStatic: FALSE
+when: 1607438096.15589

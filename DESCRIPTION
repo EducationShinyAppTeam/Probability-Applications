@@ -1,0 +1,16 @@
+Title: Probability Applications
+ShortName: Probability Applications
+Date: 2020-12-08
+Lifecycle: experimental
+Authors@R: c(
+    person(given = "Yiyang", family = "Wang", role = c("aut", "cre"))
+  )
+Chapter: Probability
+Description: This app quizzes your knowledge of turning probability applications with context into mathematical expressions using a hangman game format.
+LearningObjectives: c()
+DisplayMode: Normal
+URL: https://psu-eberly.shinyapps.io/Probability_Applications
+BugReports: https://github.com/EducationShinyAppTeam/Probability_Applications/issues
+License: CC-BY-NC-SA-4.0
+Tags: game
+Type: Shiny

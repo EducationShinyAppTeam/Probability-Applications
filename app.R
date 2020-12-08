@@ -3,10 +3,7 @@ library(shinydashboard)
 library(shinyBS)
 library(shinyWidgets)
 library(boastUtils)
-
-
-## App Metadata ----
-APP_TITLE <<- "Probability Applications"
+library(shinyjs)
 
 ## Constants ----
 GAME_OVER <- FALSE
@@ -32,7 +29,7 @@ ui <- list(
   dashboardSidebar(
     width = 250,
     sidebarMenu(
-      id = "tabs",
+      id = "pages",
       menuItem("Overview", tabName = "overview", icon = icon("tachometer-alt")),
       menuItem("Prerequisites", tabName = "concepts", icon = icon("book")),
       menuItem("Game", tabName = "test", icon = icon("gamepad")),
@@ -40,7 +37,8 @@ ui <- list(
     ),
     tags$div(
       class = "sidebar-logo",
-      boastUtils::psu_eberly_logo("reversed")
+      boastUtils::psu_eberly_logo("reversed"),
+      useShinyjs()
     )
   ),
   ## Body ----
@@ -486,53 +484,82 @@ server <- function(input, output, session) {
   selected <<- c()
   correct_answer <<- c()
 
+  # Call this function from the server with the button id that is clicked and the
+  # expression to run when the button is clicked
+  # Source: https://github.com/daattali/advanced-shiny/blob/master/busy-indicator/helpers.R
+  # TODO: REMOVE ME
+  withBusyIndicatorServer <- function(buttonId, expr) {
+    # UX stuff: show the "busy" message, hide the other messages, disable the button
+    loadingEl <- sprintf("[data-for-btn=%s] .btn-loading-indicator", buttonId)
+    doneEl <- sprintf("[data-for-btn=%s] .btn-done-indicator", buttonId)
+    errEl <- sprintf("[data-for-btn=%s] .btn-err", buttonId)
+    shinyjs::disable(buttonId)
+    shinyjs::show(selector = loadingEl)
+    shinyjs::hide(selector = doneEl)
+    shinyjs::hide(selector = errEl)
+    on.exit({
+      shinyjs::enable(buttonId)
+      shinyjs::hide(selector = loadingEl)
+    })
+    
+    # Try to run the code when the button is clicked and show an error message if
+    # an error occurs or a success message if it completes
+    tryCatch({
+      value <- expr
+      shinyjs::show(selector = doneEl)
+      shinyjs::delay(2000, shinyjs::hide(selector = doneEl, anim = TRUE, animType = "fade",
+                                         time = 0.5))
+      value
+    }, error = function(err) { errorFunc(err, buttonId) })
+  }
+  
   # Learning Locker Statement Generation
-  .generateStatement <- function(session, verb = NA, object = NA, description = NA, value = NA) {
-    if (is.na(object)) {
-      object <- paste0("#shiny-tab-", session$input$tabs)
-    } else {
-      object <- paste0("#", object)
-    }
+  # .generateStatement <- function(session, verb = NA, object = NA, description = NA, value = NA) {
+  #   if (is.na(object)) {
+  #     object <- paste0("#shiny-tab-", session$input$pages)
+  #   } else {
+  #     object <- paste0("#", object)
+  #   }
+  # 
+  #   stmt <- list(
+  #     verb = verb,
+  #     object = list(
+  #       id = paste0(boastUtils::getCurrentAddress(session), object),
+  #       name = paste0(APP_TITLE),
+  #       description = description
+  #     )
+  #   )
+  # 
+  #   if (!is.na(value)) {
+  #     stmt$result <- list(
+  #       response = paste(value)
+  #     )
+  #   }
+  # 
+  #   statement <- rlocker::createStatement(stmt)
+  #   response <- rlocker::store(session, statement)
+  # 
+  #   return(response)
+  # }
 
-    stmt <- list(
-      verb = verb,
-      object = list(
-        id = paste0(boastUtils::getCurrentAddress(session), object),
-        name = paste0(APP_TITLE),
-        description = description
-      )
-    )
-
-    if (!is.na(value)) {
-      stmt$result <- list(
-        response = paste(value)
-      )
-    }
-
-    statement <- rlocker::createStatement(stmt)
-    response <- rlocker::store(session, statement)
-
-    return(response)
-  }
-
-  .generateAnsweredStatement <- function(session, verb = NA, object = NA, description = NA, interactionType = NA, response = NA, success = NA, completion = FALSE) {
-    statement <- rlocker::createStatement(list(
-      verb = verb,
-      object = list(
-        id = paste0(getCurrentAddress(session), "#", object),
-        name = paste0(APP_TITLE),
-        description = paste0("Identify the distribution of given text: ", description),
-        interactionType = interactionType
-      ),
-      result = list(
-        success = success,
-        response = response,
-        completion = completion
-      )
-    ))
-
-    return(rlocker::store(session, statement))
-  }
+  # .generateAnsweredStatement <- function(session, verb = NA, object = NA, description = NA, interactionType = NA, response = NA, success = NA, completion = FALSE) {
+  #   statement <- rlocker::createStatement(list(
+  #     verb = verb,
+  #     object = list(
+  #       id = paste0(getCurrentAddress(session), "#", object),
+  #       name = paste0(APP_TITLE),
+  #       description = paste0("Identify the distribution of given text: ", description),
+  #       interactionType = interactionType
+  #     ),
+  #     result = list(
+  #       success = success,
+  #       response = response,
+  #       completion = completion
+  #     )
+  #   ))
+  # 
+  #   return(rlocker::store(session, statement))
+  # }
 
   observeEvent(input$info, {
     sendSweetAlert(
@@ -555,14 +582,14 @@ server <- function(input, output, session) {
 
   # Go button
   observeEvent(input$go, {
-    updateTabItems(session, "tabs", "test")
+    updateTabItems(session, "pages", "test")
     updateButton(session, "submit", disabled = FALSE)
     updateButton(session, "nextq", disabled = FALSE)
   })
 
   # Ready button
   observeEvent(input$ready, {
-    updateTabItems(session, "tabs", "information")
+    updateTabItems(session, "pages", "information")
   })
 
   # Reset button
@@ -575,7 +602,7 @@ server <- function(input, output, session) {
     id <- 1
 
     GAME_OVER <<- FALSE
-    .generateStatement(session, object = "restart", verb = "interacted", description = "Game has been restarted.")
+    # .generateStatement(session, object = "restart", verb = "interacted", description = "Game has been restarted.")
 
     output$question <- renderUI({
       withMathJax()
@@ -797,24 +824,24 @@ server <- function(input, output, session) {
       }
     }
 
-    .generateAnsweredStatement(
-      session,
-      object = "submit",
-      verb = "answered",
-      description = bank[id, 2],
-      response = input$mc1,
-      interactionType = "choice",
-      success = success,
-      completion = GAME_OVER
-    )
+    # .generateAnsweredStatement(
+    #   session,
+    #   object = "submit",
+    #   verb = "answered",
+    #   description = bank[id, 2],
+    #   response = input$mc1,
+    #   interactionType = "choice",
+    #   success = success,
+    #   completion = GAME_OVER
+    # )
 
-    if (GAME_OVER) {
-      if (WIN) {
-        .generateStatement(session, object = "game", verb = "completed", description = "Player has won the game.")
-      } else {
-        .generateStatement(session, object = "game", verb = "completed", description = "Player has lost the game.")
-      }
-    }
+    # if (GAME_OVER) {
+    #   if (WIN) {
+    #     .generateStatement(session, object = "game", verb = "completed", description = "Player has won the game.")
+    #   } else {
+    #     .generateStatement(session, object = "game", verb = "completed", description = "Player has lost the game.")
+    #   }
+    # }
 
     output$mark <- renderUI({
       if(!is.null(input$mc1) || length(input$mc1) != 0) {
@@ -843,7 +870,7 @@ server <- function(input, output, session) {
       closeOnClickOutside = TRUE,
       p(bank[id, 3])
     )
-    .generateStatement(session, object = "hint", verb = "interacted", description = "Hint", value = bank[id, 3])
+    # .generateStatement(session, object = "hint", verb = "interacted", description = "Hint", value = bank[id, 3])
   })
 
   ### Cartoon ###
