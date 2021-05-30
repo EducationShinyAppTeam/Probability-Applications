@@ -20,6 +20,10 @@ ui <- list(
         class = "dropdown", actionLink("info", icon("info"))
       ),
       tags$li(
+        class = "dropdown",
+        boastUtils::surveyLink(name = "Probability_Applications")
+      ),
+      tags$li(
         class = "dropdown", tags$a(
           href = "https://shinyapps.science.psu.edu/", icon("home")
         )
@@ -82,7 +86,7 @@ ui <- list(
             inputId = "go",
             label = "GO!",
             size = "large",
-            icon = icon("bolt")
+            icon = icon("book")
           )
         ),
         br(),
@@ -342,9 +346,9 @@ ui <- list(
           style = "text-align: center;",
           bsButton(
             inputId = "ready",
-            label = "I'm ready!",
+            label = "Go!",
             size = "large",
-            icon = icon("bolt")
+            icon = icon("gamepad")
           )
         )
       ),
@@ -582,14 +586,14 @@ server <- function(input, output, session) {
 
   # Go button
   observeEvent(input$go, {
-    updateTabItems(session, "pages", "test")
+    updateTabItems(session, "pages", "concepts")
     updateButton(session, "submit", disabled = FALSE)
     updateButton(session, "nextq", disabled = FALSE)
   })
 
   # Ready button
   observeEvent(input$ready, {
-    updateTabItems(session, "pages", "information")
+    updateTabItems(session, "pages", "test")
   })
 
   # Reset button
