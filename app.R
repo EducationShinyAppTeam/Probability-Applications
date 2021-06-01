@@ -35,8 +35,8 @@ ui <- list(
     sidebarMenu(
       id = "pages",
       menuItem("Overview", tabName = "overview", icon = icon("tachometer-alt")),
-      menuItem("Prerequisites", tabName = "concepts", icon = icon("book")),
-      menuItem("Game", tabName = "test", icon = icon("gamepad")),
+      menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
+      menuItem("Game", tabName = "game", icon = icon("gamepad")),
       menuItem("References", tabName = "references", icon = icon("leanpub"))
     ),
     tags$div(
@@ -100,7 +100,7 @@ ui <- list(
       ),
       ### Prerequisites Page ----
       tabItem(
-        tabName = "concepts",
+        tabName = "prerequisites",
         withMathJax(),
         h2("Prerequisites"),
         p("Here are some concepts you may want to review before playing the game."),
@@ -353,7 +353,7 @@ ui <- list(
       ),
       ## Game Page ----
       tabItem(
-        tabName = "test",
+        tabName = "game",
         withMathJax(),
         h2("Probability Application Game"),
         p("Exam the given context and then select the expression that addresses
@@ -568,7 +568,8 @@ server <- function(input, output, session) {
     sendSweetAlert(
       session = session,
       title = "Instructions:",
-      text = "This app quizzes your knowledge of turning probability applications with context into mathematical expressions using a hangman game format.",
+      text = "This app quizzes your knowledge of turning probability applications 
+              with context into mathematical expressions using a hangman game format.",
       type = "info"
     )
   })
@@ -585,21 +586,42 @@ server <- function(input, output, session) {
 
   # Go button
   observeEvent(input$go, {
-    updateTabItems(session, "pages", "concepts")
-    updateButton(session, "submit", disabled = FALSE)
-    updateButton(session, "nextq", disabled = FALSE)
+    updateTabItems(
+      session = session, 
+      inputId = "pages", 
+      selected = "prerequisites")
+    updateButton(
+      session = session, 
+      inputId = "submit", 
+      disabled = FALSE)
+    updateButton(
+      session = session, 
+      inputId = "nextq", 
+      disabled = FALSE)
   })
 
   # Ready button
   observeEvent(input$ready, {
-    updateTabItems(session, "pages", "test")
+    updateTabItems(
+      session = session, 
+      inputId = "pages", 
+      selected = "game")
   })
 
   # Reset button
   observeEvent(input$restart, {
-    updateButton(session, "submit", disabled = FALSE)
-    updateButton(session, "nextq", disabled = FALSE)
-    updateButton(session, "restart", disabled = FALSE)
+    updateButton(
+      session = session, 
+      inputId = "submit", 
+      disabled = FALSE)
+    updateButton(
+      session = session, 
+      inputId = "nextq", 
+      disabled = FALSE)
+    updateButton(
+      session = session, 
+      inputId = "restart", 
+      disabled = FALSE)
     Qs <<- nrow(bank)
     Qs_array <<- c(1:Qs)
     id <- 1
@@ -711,8 +733,13 @@ server <- function(input, output, session) {
         output$question <- renderUI({
           return(withMathJax(bank[id, 2]))
         })
-        updateButton(session, "submit", disabled = FALSE)
-        updateRadioGroupButtons(session, "mc1",
+        updateButton(
+          session = session, 
+          inputId = "submit", 
+          disabled = FALSE)
+        updateRadioGroupButtons(
+          session = session, 
+          inputId = "mc1",
           selected = character(0),
           choices = list(
             bank[id, "A"],
@@ -738,9 +765,18 @@ server <- function(input, output, session) {
       })
     }
     else {
-      updateButton(session, "submit", disabled = TRUE)
-      updateButton(session, "nextq", disabled = TRUE)
-      updateButton(session, "restart", disabled = FALSE)
+      updateButton(
+        session = session, 
+        inputId = "submit", 
+        disabled = TRUE)
+      updateButton(
+        session = session, 
+        inputId = "nextq", 
+        disabled = TRUE)
+      updateButton(
+        session = session, 
+        inputId = "restart", 
+        disabled = FALSE)
       sendSweetAlert(
         session = session,
         title = "Run out of question",
@@ -797,13 +833,28 @@ server <- function(input, output, session) {
           closeOnClickOutside = TRUE,
           h4("Congrats! You Win! Please click Restart to start over.")
         )
-        updateButton(session, "submit", disabled = TRUE)
-        updateButton(session, "nextq", disabled = TRUE)
-        updateButton(session, "restart", disabled = FALSE)
+        updateButton(
+          session = session, 
+          inputId = "submit", 
+          disabled = TRUE)
+        updateButton(
+          session = session, 
+          inputId = "nextq", 
+          disabled = TRUE)
+        updateButton(
+          session = session, 
+          inputId = "restart", 
+          disabled = FALSE)
       }
       else {
-        updateButton(session, "submit", disabled = TRUE)
-        updateButton(session, "nextq", disabled = FALSE)
+        updateButton(
+          session = session, 
+          inputId = "submit", 
+          disabled = TRUE)
+        updateButton(
+          session = session, 
+          inputId = "nextq", 
+          disabled = FALSE)
       }
     } else {
       # print("wrong")
@@ -818,12 +869,27 @@ server <- function(input, output, session) {
           closeOnClickOutside = TRUE,
           h4("You lost. Please click Restart to start over")
         )
-        updateButton(session, "submit", disabled = TRUE)
-        updateButton(session, "nextq", disabled = TRUE)
-        updateButton(session, "restart", disabled = FALSE)
+        updateButton(
+          session = session, 
+          inputId = "submit", 
+          disabled = TRUE)
+        updateButton(
+          session = session, 
+          inputId = "nextq", 
+          disabled = TRUE)
+        updateButton(
+          session = session, 
+          inputId = "restart",
+          disabled = FALSE)
       } else {
-        updateButton(session, "submit", disabled = TRUE)
-        updateButton(session, "nextq", disabled = FALSE)
+        updateButton(
+          session = session, 
+          inputId = "submit", 
+          disabled = TRUE)
+        updateButton(
+          session = session, 
+          inputId = "nextq",
+          disabled = FALSE)
       }
     }
 
