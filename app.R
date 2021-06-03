@@ -51,33 +51,23 @@ ui <- list(
       tabItem(
         tabName = "overview",
         h1("Probability Applications"),
-        p(
-          "This app quizzes your knowledge of turning probability applications
-          with context into mathematical expressions using a hangman game format."
-        ),
+        p("This app quizzes your knowledge of turning probability applications
+          with context into mathematical expressions using a hangman game format."),
         h2("Instructions"),
         tags$ul(
-          tags$li(
-            "You'll start this game with a little man on the top of a tree, and
+          tags$li("You'll start this game with a little man on the top of a tree, and
             you are trying to prevent his fall to the ground. If you provide a
             wrong answer, he falls to a lower branch and eventually to the ground.
             If you get 10 questions correct before he falls to the ground, you
-            have won the game and saved the little man!"
-          ),
-          tags$li(
-            "Read the given text before you make your choice. Make sure you
-            understand the scenario text provided."
-          ),
-          tags$li(
-            "If you need some extra help, click the 'hint' button (shown as a
-            question mark symbol)."
-          ),
+            have won the game and saved the little man!"),
+          tags$li("Read the given text before you make your choice. Make sure you
+            understand the scenario text provided."),
+          tags$li("If you need some extra help, click the 'hint' button (shown as a
+            question mark symbol)."),
           tags$li("After you select the choice, click 'Submit' to check your
                   answer."),
-          tags$li(
-            "Once you click 'Submit', you cannot revise your answer. You can
-            only click 'Next Question' to move on your challenge."
-          )
+          tags$li("Once you click 'Submit', you cannot revise your answer. You can
+            only click 'Next Question' to move on your challenge.")
         ),
         div(
           style = "text-align: center;",
@@ -91,7 +81,7 @@ ui <- list(
         br(),
         br(),
         h3("Acknowledgements"),
-        p("This app was developed and coded by Yiyang Wang.",
+        p("This app was developed and coded by Yiyang Wang and updated by Shravani Samala.",
           br(),
           br(),
           br(),
@@ -362,6 +352,7 @@ ui <- list(
           column(
             width = 6,
             wellPanel(
+              style = "background-color: #FFFFFF",
               h3("Context"),
               uiOutput("question"),
               br(),
@@ -382,6 +373,7 @@ ui <- list(
                   yes = icon("check-square"),
                   no = icon("square-o")
                 ),
+                
                 choices = list(
                   # "Pick the expression below that best addresses the question.",
                   "\\(\\frac{1}{4}\\)",
@@ -437,6 +429,7 @@ ui <- list(
         uiOutput("math1"),
         uiOutput("math2")
       ),
+      
       tabItem(
         ### References ----
         tabName = "references",
@@ -516,54 +509,7 @@ server <- function(input, output, session) {
     }, error = function(err) { errorFunc(err, buttonId) })
   }
   
-  # Learning Locker Statement Generation
-  # .generateStatement <- function(session, verb = NA, object = NA, description = NA, value = NA) {
-  #   if (is.na(object)) {
-  #     object <- paste0("#shiny-tab-", session$input$pages)
-  #   } else {
-  #     object <- paste0("#", object)
-  #   }
-  # 
-  #   stmt <- list(
-  #     verb = verb,
-  #     object = list(
-  #       id = paste0(boastUtils::getCurrentAddress(session), object),
-  #       name = paste0(APP_TITLE),
-  #       description = description
-  #     )
-  #   )
-  # 
-  #   if (!is.na(value)) {
-  #     stmt$result <- list(
-  #       response = paste(value)
-  #     )
-  #   }
-  # 
-  #   statement <- rlocker::createStatement(stmt)
-  #   response <- rlocker::store(session, statement)
-  # 
-  #   return(response)
-  # }
-
-  # .generateAnsweredStatement <- function(session, verb = NA, object = NA, description = NA, interactionType = NA, response = NA, success = NA, completion = FALSE) {
-  #   statement <- rlocker::createStatement(list(
-  #     verb = verb,
-  #     object = list(
-  #       id = paste0(getCurrentAddress(session), "#", object),
-  #       name = paste0(APP_TITLE),
-  #       description = paste0("Identify the distribution of given text: ", description),
-  #       interactionType = interactionType
-  #     ),
-  #     result = list(
-  #       success = success,
-  #       response = response,
-  #       completion = completion
-  #     )
-  #   ))
-  # 
-  #   return(rlocker::store(session, statement))
-  # }
-
+  
   observeEvent(input$info, {
     sendSweetAlert(
       session = session,
