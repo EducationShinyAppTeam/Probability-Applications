@@ -353,6 +353,7 @@ ui <- list(
             width = 6,
             wellPanel(
               style = "background-color: #FFFFFF",
+              
               h3("Context"),
               uiOutput("question"),
               br(),
@@ -384,8 +385,14 @@ ui <- list(
                 width = "100%",
                 justified = FALSE,
                 individual = FALSE
+                
+                
               ),
+              
+              #Paste hint instead of pop-up 
+              uiOutput("hintDisplay"),
               br(),
+              
               fluidRow(
                 column(
                   width = 3,
@@ -580,6 +587,13 @@ server <- function(input, output, session) {
       hint <<- withMathJax(bank[id, 3])
       return(bank[id, 2])
     })
+    
+    output$hint <- renderUI({
+      withMathJax()
+      hint <<- withMathJax(bank[id, 3])
+      return(bank[id, 3])
+    })
+    
     updateRadioGroupButtons(session, "mc1",
       choices = list(
         bank[id, "A"],
@@ -877,14 +891,20 @@ server <- function(input, output, session) {
   })
 
   ### PRINT HINTS###
-  observeEvent(input$hint, {
-    sendSweetAlert(
-      session = session,
-      title = "Hint:",
-      type = NULL,
-      closeOnClickOutside = TRUE,
-      p(bank[id, 3])
-    )
+  observeEvent(
+    eventExpr = input$hint, 
+    handlerExpr = {
+    output$hintDisplay <- renderUI({
+      p(tags$b("Hint:"), bank[id, 3])
+    })
+    
+    # sendSweetAlert(
+    #   session = session,
+    #   title = "Hint:",
+    #   type = NULL,
+    #   closeOnClickOutside = TRUE,
+    #   p(bank[id, 3])
+    # )
     # .generateStatement(session, object = "hint", verb = "interacted", description = "Hint", value = bank[id, 3])
   })
 
@@ -925,4 +945,4 @@ server <- function(input, output, session) {
   })
 }
 
-boastApp(server = server, ui = ui)
+boastUtils::boastApp(ui = ui, server = server)
