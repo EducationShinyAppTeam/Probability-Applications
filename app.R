@@ -73,7 +73,7 @@ ui <- list(
           style = "text-align: center;",
           bsButton(
             inputId = "go",
-            label = "GO!",
+            label = "Prerequisites!",
             size = "large",
             icon = icon("book")
           )
@@ -280,9 +280,9 @@ ui <- list(
             p("\\(f(x)=\\frac{1}{\\sqrt[2]{2\\pi\\sigma^2}}\\cdot
               exp\\left(\\frac{-\\left(x-\\mu\\right)^2}{2\\sigma^2}\\right)\\)",
               br(),
-              "(also sometimes called \\(\\phi\\)
-              with the CDF called \\(\\Phi\\))"
-              ),
+              "(For a standard normal with \\(\\mu=0\\) and \\(\\sigma=1\\), the
+              density is also sometimes called \\(\\phi\\) with the CDF called
+              \\(\\Phi\\))",),
             p("\\(\\text{E}\\!\\left[X\\right]=\\mu\\)"),
             p("\\(\\text{Var}\\!\\left[X\\right]=\\sigma^2\\)"),
             p("\\(M_{X}(t)=exp\\left(\\mu t + \\frac{\\sigma^2t^2}{2}\\right)\\)")
@@ -361,7 +361,8 @@ ui <- list(
                 inputId = "hint",
                 label = "Hint",
                 icon = icon("question"),
-                size = "large"
+                size = "large", 
+                disabled = FALSE
               ),
               br(),
               radioGroupButtons(
@@ -575,6 +576,7 @@ server <- function(input, output, session) {
       session = session, 
       inputId = "restart", 
       disabled = FALSE)
+    
     Qs <<- nrow(bank)
     Qs_array <<- c(1:Qs)
     id <- 1
