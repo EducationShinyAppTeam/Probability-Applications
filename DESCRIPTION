@@ -3,7 +3,7 @@ ShortName: Probability Applications
 Date: 2020-12-08
 Lifecycle: experimental
 Authors@R: c(
-    person(given = "Yiyang", family = "Wang", role = c("aut", "cre"))
+    person(given = "Yiyang", family = "Wang", role = c("aut", "cre")),
     person(given = "Shravani", family = "Samala", role = c("aut"))
   )
 Chapter: Probability

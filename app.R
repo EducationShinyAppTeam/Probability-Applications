@@ -922,8 +922,9 @@ server <- function(input, output, session) {
   observeEvent(
     eventExpr = input$hint, 
     handlerExpr = {
-    output$hintDisplay <- renderUI({
-      p(tags$b("Hint:"), bank[id, 3])
+      withMathJax()
+      output$hintDisplay <- renderUI({
+        p(tags$b("Hint:"), bank[id, 3])
     })
   
     
