@@ -577,7 +577,7 @@ server <- function(input, output, session) {
       inputId = "restart", 
       disabled = FALSE)
     
-    
+               
     Qs <<- nrow(bank)
     Qs_array <<- c(1:Qs)
     id <- 1
@@ -922,6 +922,12 @@ server <- function(input, output, session) {
   observeEvent(
     eventExpr = input$hint, 
     handlerExpr = {
+      output$math1 <- renderUI({
+        withMathJax()
+      })
+      output$math2 <- renderUI({
+        withMathJax()
+      })
       withMathJax()
       output$hintDisplay <- renderUI({
         p(tags$b("Hint:"), bank[id, 3])
