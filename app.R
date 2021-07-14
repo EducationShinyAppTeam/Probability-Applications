@@ -85,7 +85,7 @@ ui <- list(
           br(),
           br(),
           br(),
-          div(class = "updated", "Last Update: 9/14/2020 by NJH.")
+          div(class = "updated", "Last Update: 7/14/2021 by SJS.")
         )
       ),
       ### Prerequisites Page ----
@@ -620,8 +620,6 @@ server <- function(input, output, session) {
     output$mark <- renderUI({
       img(src = NULL, width = 50)
     })
-    value[["mistake"]] <<- 0
-    value$correct <<- 0
   })
 
   # Print out a question
