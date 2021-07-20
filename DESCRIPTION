@@ -4,11 +4,14 @@ Date: 2020-12-08
 Lifecycle: experimental
 Authors@R: c(
     person(given = "Yiyang", family = "Wang", role = c("aut", "cre")),
-    person(given = "Shravani", family = "Samala", role = c("aut"))
+    person(given = "Shravani", family = "Samala", role = c("aut")),
+    person(given = "Neil", family = "Hatfield", email = "neil.hatfield@psu.edu", role = c("aut"))
   )
 Chapter: Probability
 Description: This app quizzes your knowledge of turning probability applications with context into mathematical expressions using a hangman game format.
-LearningObjectives: c()
+LearningObjectives: c(
+    "The student will learn to apply probability theorems to various real world contexts"
+  )
 DisplayMode: Normal
 URL: https://psu-eberly.shinyapps.io/Probability_Applications
 BugReports: https://github.com/EducationShinyAppTeam/Probability_Applications/issues
