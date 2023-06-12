@@ -47,7 +47,7 @@ ui <- list(
     ## Body ----
     dashboardBody(
       tabItems(
-        ### Overview page ----
+        ## Overview page ----
         tabItem(
           tabName = "overview",
           h1("Probability Applications"),
@@ -67,12 +67,12 @@ ui <- list(
             tags$li("After you select the choice, click 'Submit' to check your
                     answer."),
             tags$li("Once you click 'Submit', you cannot revise your answer. You
-                    can only click 'Next Question' to move on your challenge.")
+                    can only click 'Next Question' to move on in your challenge.")
           ),
           div(
             style = "text-align: center;",
             bsButton(
-              inputId = "go",
+              inputId = "goToPrereq",
               label = "Prerequisites",
               size = "large",
               icon = icon("book")
@@ -86,10 +86,15 @@ ui <- list(
           br(),
           br(),
           br(),
-          div(class = "updated", "Last Update: 7/14/2021 by SJS.")
+          "Cite this app as:",
+          br(),
+          citeApp(),
+          br(),
+          br(),
+          div(class = "updated", "Last Update: 6/12/2023 by SB.")
           )
         ),
-        ### Prerequisites Page ----
+        ## Prerequisites Page ----
         tabItem(
           tabName = "prerequisites",
           withMathJax(),
@@ -335,10 +340,10 @@ ui <- list(
           div(
             style = "text-align: center;",
             bsButton(
-              inputId = "ready",
-              label = "Go!",
+              inputId = "goToGame",
+              label = "Game!",
               size = "large",
-              icon = icon("gamepad")
+              icon = icon("bolt")
             )
           )
         ),
@@ -364,7 +369,7 @@ ui <- list(
                   selected = character(0),
                   checkIcon = list(
                     yes = icon("check-square"),
-                    no = icon("square-o")
+                    no = icon("square")
                   ),
                   choices = list(
                     # "Pick the expression below that best addresses the question.",
@@ -431,7 +436,7 @@ ui <- list(
         ),
 
         tabItem(
-          ### References ----
+          ## References ----
           tabName = "references",
           h2("References"),
           p(
@@ -477,37 +482,42 @@ ui <- list(
 # Define the server ---
 server <- function(input, output, session) {
   ## Info Button ----
-  observeEvent(input$info, {
-    sendSweetAlert(
-      session = session,
-      title = "Instructions",
-      text = "This app quizzes your knowledge of turning probability applications
-              with context into mathematical expressions using a hangman game format.",
-      type = "info"
-    )
-  })
-
-  ## Prereq's "Go" Button ----
   observeEvent(
-    eventExpr = input$go,
+    eventExpr = input$info, 
+    handlerExpr = {
+      sendSweetAlert(
+        session = session,
+        title = "Information",
+        text = "This app quizzes your knowledge of turning probability applications
+              with context into mathematical expressions using a hangman game format.",
+        type = "info"
+      )
+    }
+  )
+
+  ## Prerequisites Button ----
+  observeEvent(
+    eventExpr = input$goToPrereq,
     handlerExpr = {
       updateTabItems(
         session = session,
         inputId = "pages",
         selected = "prerequisites"
       )
-    })
+    }
+  )
 
-  # Ready button ----
+  # Game button ----
   observeEvent(
-    eventExpr = input$ready,
+    eventExpr = input$goToGame,
     handlerExpr = {
       updateTabItems(
         session = session,
         inputId = "pages",
         selected = "game"
       )
-    })
+    }
+  )
 
   ## Set Up Game Variables ----
   shuffledProbIDs <- sample(
@@ -554,7 +564,7 @@ server <- function(input, output, session) {
       ),
       checkIcon = list(
         yes = icon("check-square"),
-        no = icon("square-o")
+        no = icon("square")
       ),
       status = "game"
     )
@@ -612,7 +622,7 @@ server <- function(input, output, session) {
       } else {
         scoring$correct <- scoring$correct + 1
       }
-
+      
       ### Game Over Check
       if (scoring$correct >= 10) {
         sendSweetAlert(
@@ -629,7 +639,7 @@ server <- function(input, output, session) {
       } else if (scoring$mistakes  >= 4) {
         sendSweetAlert(
           session = session,
-          title = "You lost.",
+          title = "You Lost.",
           type = "error",
           text = "You have lost the game. Please try again.",
           closeOnClickOutside = FALSE
@@ -640,7 +650,8 @@ server <- function(input, output, session) {
           disabled = TRUE
         )
       }
-    })
+    }
+  )
 
   ## Next Question Button ----
   observeEvent(
@@ -671,7 +682,13 @@ server <- function(input, output, session) {
         disabled = FALSE
       )
       output$mark <- renderIcon()
-    })
+      updateButton(
+        session = session,
+        inputId = "nextQuestion",
+        disabled = TRUE
+      )
+    }
+  )
 
   ## Reset button ----
   observeEvent(
@@ -685,7 +702,7 @@ server <- function(input, output, session) {
       updateButton(
         session = session,
         inputId = "nextQuestion",
-        disabled = FALSE
+        disabled = TRUE
       )
 
       shuffledProbIDs <- sample(
@@ -699,48 +716,53 @@ server <- function(input, output, session) {
       scoring$mistakes <- 0
       output$hintDisplay <- renderUI({return(NULL)})
       output$mark <- renderIcon()
-    })
+    }
+  )
 
   ## Display score ----
-  output$correct <- renderUI({
-    paste("Number of questions answered correctly:", scoring$correct)
-  })
-
-  ## Cartoon Display ----
-  output$gameProgressTree <- renderUI({
-    img(src = "Cell01.jpg")
-    if (scoring$mistakes == 0) {
-      img(
-        src = "Cell01.jpg",
-        width = "100%",
-        alt = "The man is on the top branch"
-      )
-    } else if (scoring$mistakes == 1) {
-      img(
-        src = "Cell02.jpg",
-        width = "100%",
-        alt = "The man has fallen one branch"
-      )
-    } else if (scoring$mistakes == 2) {
-      img(
-        src = "Cell03.jpg",
-        width = "100%",
-        alt = "The man has fallen another branch, only one remaining"
-      )
-    } else if (scoring$mistakes == 3) {
-      img(
-        src = "Cell04.jpg",
-        width = "100%",
-        alt = "The man has fallen to the last branch"
-      )
-    } else if (scoring$mistakes == 4) {
-      img(
-        src = "Cell05.jpg",
-        width = "100%",
-        alt = "The man has fallen to the ground"
-      )
+  output$correct <- renderUI(
+    expr = {
+      paste("Number of questions answered correctly:", scoring$correct)
     }
-  })
+  )
+  
+  ## Cartoon Display ----
+  output$gameProgressTree <- renderUI(
+    expr = {
+      img(src = "Cell01.jpg")
+      if (scoring$mistakes == 0) {
+        img(
+          src = "Cell01.jpg",
+          width = "100%",
+          alt = "The man is on the top branch"
+        )
+      } else if (scoring$mistakes == 1) {
+        img(
+          src = "Cell02.jpg",
+          width = "100%",
+          alt = "The man has fallen one branch"
+        )
+      } else if (scoring$mistakes == 2) {
+        img(
+          src = "Cell03.jpg",
+          width = "100%",
+          alt = "The man has fallen another branch, only one remaining"
+        )
+      } else if (scoring$mistakes == 3) {
+        img(
+          src = "Cell04.jpg",
+          width = "100%",
+          alt = "The man has fallen to the last branch"
+        )
+      } else if (scoring$mistakes == 4) {
+        img(
+          src = "Cell05.jpg",
+          width = "100%",
+          alt = "The man has fallen to the ground"
+        )
+      }
+    }
+  )
 }
 
 boastUtils::boastApp(ui = ui, server = server)
