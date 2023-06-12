@@ -434,7 +434,6 @@ ui <- list(
           uiOutput("math1"),
           uiOutput("math2")
         ),
-
         tabItem(
           ## References ----
           tabName = "references",
@@ -551,40 +550,45 @@ server <- function(input, output, session) {
   )
 
   # Display a question ----
-  output$question <- renderUI({
-    updateRadioGroupButtons(
-      session = session,
-      inputId = "mc1",
-      selected = character(0),
-      choices = list(
-        ansChoices()[1],
-        ansChoices()[2],
-        ansChoices()[3],
-        ansChoices()[4]
-      ),
-      checkIcon = list(
-        yes = icon("check-square"),
-        no = icon("square")
-      ),
-      status = "game"
-    )
-    output$math1 <- renderUI({withMathJax()})
-    output$math2 <- renderUI({withMathJax()})
-    withMathJax(questionBank[scoring$questionNum, "Problem.Description"])
-  })
-
+  output$question <- renderUI(
+    expr = {
+      updateRadioGroupButtons(
+        session = session,
+        inputId = "mc1",
+        selected = character(0),
+        choices = list(
+          ansChoices()[1],
+          ansChoices()[2],
+          ansChoices()[3],
+          ansChoices()[4]
+        ),
+        checkIcon = list(
+          yes = icon("check-square"),
+          no = icon("square")
+        ),
+        status = "game"
+      )
+      output$math1 <- renderUI({withMathJax()})
+      output$math2 <- renderUI({withMathJax()})
+      withMathJax(questionBank[scoring$questionNum, "Problem.Description"])
+    }
+  )
+  
   ## Display Hint ----
   observeEvent(
     eventExpr = input$hint,
     handlerExpr = {
       output$math1 <- renderUI({withMathJax()})
       output$math2 <- renderUI({withMathJax()})
-      output$hintDisplay <- renderUI({
-        withMathJax(
-          p(tags$b("Hint:"), questionBank[scoring$questionNum, "Hint"])
-        )
-      })
-    })
+      output$hintDisplay <- renderUI(
+        expr = {
+          withMathJax(
+            p(tags$b("Hint:"), questionBank[scoring$questionNum, "Hint"])
+          )
+        }
+      )
+    }
+  )
 
   ## Submit Button ----
   observeEvent(
