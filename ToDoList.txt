@@ -1,0 +1,10 @@
+# Things Needed for This Version
+
+1. Add screenshot ✓ 
+2. Fix description/README files ✓ 
+3. Fix The `name` provided ('square-o') does not correspond to a known icon ✓ 
+4. Rename Objects
+5. Fix the Next Button allowing skipping ✓ 
+6. Add cite this app as entry✓ 
+
+# Ideas for Future Development
