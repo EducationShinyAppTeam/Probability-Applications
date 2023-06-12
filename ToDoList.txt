@@ -8,3 +8,14 @@
 6. Add cite this app as entry✓ 
 
 # Ideas for Future Development
+
+1. Maybe add to the prerequisites page.
+
+  recommendation from another peer review:
+    "On the prereq page, add an equivalent 
+    course background which would be indicate necessary knowledge to do well with 
+    this app. (ie. STAT 414 etc.) Maybe offer a link to a textbook or video 
+    if someone wanted to extend/supplement their learning." - pophillips 
+
+2. Find out whether error alert is appropriate for failing the game, as no real
+error or app crash occurs.
