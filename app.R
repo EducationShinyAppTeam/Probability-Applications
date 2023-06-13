@@ -55,11 +55,11 @@ ui <- list(
             with context into mathematical expressions using a hangman game format."),
           h2("Instructions"),
           tags$ul(
-            tags$li("You'll start this game with a little man on the top of a tree,
-                  and you are trying to prevent his fall to the ground. If you
-                  provide a wrong answer, he falls to a lower branch and
+            tags$li("You will start this game with a little man on the top of a 
+                  tree, and you will try to prevent his fall to the ground. If you
+                  provide a wrong answer, he will fall to a lower branch and
                   eventually to the ground. If you get 10 questions correct
-                  before he falls to the ground, you have won the game and saved
+                  before he falls to the ground, you will win the game and save
                   the little man!"),
             tags$li("Read the given text before you make your choice. Make sure
                     you understand the scenario text provided."),
@@ -626,7 +626,6 @@ server <- function(input, output, session) {
       } else {
         scoring$correct <- scoring$correct + 1
       }
-      
       ### Game Over Check
       if (scoring$correct >= 10) {
         sendSweetAlert(
