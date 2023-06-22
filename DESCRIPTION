@@ -5,7 +5,8 @@ Lifecycle: experimental
 Authors@R: c(
     person(given = "Yiyang", family = "Wang", role = c("aut", "cre")),
     person(given = "Shravani", family = "Samala", role = c("aut")),
-    person(given = "Neil", family = "Hatfield", email = "neil.hatfield@psu.edu", role = c("aut"))
+    person(given = "Neil", family = "Hatfield", email = "neil.hatfield@psu.edu", role = c("aut")),
+    person(given = "Sean", family = "Burke", role = c("ctb"))
   )
 Chapter: Probability
 Description: This app quizzes your knowledge of turning probability applications with context into mathematical expressions using a hangman game format.

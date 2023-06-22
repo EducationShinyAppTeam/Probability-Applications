@@ -81,8 +81,8 @@ ui <- list(
           br(),
           br(),
           h3("Acknowledgements"),
-          p("This app was developed and coded by Yiyang Wang and updated by
-          Shravani Samala.",
+          p("This app was developed and coded by Yiyang Wang. The app was further
+            updated by Shravani Samala and Sean Burke.",
           br(),
           br(),
           br(),
