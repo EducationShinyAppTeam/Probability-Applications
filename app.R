@@ -427,8 +427,14 @@ ui <- list(
             ),
             column(
               width = 6,
-              uiOutput("correct", align = "center"),
-              uiOutput("gameProgressTree", align = "center")
+              uiOutput(
+                outputId = "correct",
+                align = "center"
+              ),
+              uiOutput(
+                outputId = "gameProgressTree",
+                align = "center"
+              )
             )
           ),
           uiOutput("math1"),
@@ -707,7 +713,6 @@ server <- function(input, output, session) {
         inputId = "nextQuestion",
         disabled = TRUE
       )
-
       shuffledProbIDs <- sample(
         x = seq_len(nrow(questionBank)),
         size = nrow(questionBank),
@@ -725,7 +730,10 @@ server <- function(input, output, session) {
   ## Display score ----
   output$correct <- renderUI(
     expr = {
-      paste("Number of questions answered correctly:", scoring$correct)
+      paste0(
+        "Number of questions answered correctly: ",
+        scoring$correct
+      )
     }
   )
   
