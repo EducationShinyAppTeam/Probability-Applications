@@ -6,6 +6,7 @@ Authors@R: c(
     person(given = "Yiyang", family = "Wang", role = c("aut", "cre")),
     person(given = "Shravani", family = "Samala", role = c("aut")),
     person(given = "Neil", family = "Hatfield", email = "neil.hatfield@psu.edu", role = c("aut")),
+    person(given = "Dennis", family = "Pearl", role = c("aut")),
     person(given = "Sean", family = "Burke", role = c("ctb"))
   )
 Chapter: Probability

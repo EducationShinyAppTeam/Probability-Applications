@@ -105,7 +105,7 @@ ui <- list(
             width = 12,
             title = "General Equations",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             p("Expectation"),
             p(
               "\\(\\text{E}\\!\\left[\\sum_i{a_{i}X_{i}}\\right]=
