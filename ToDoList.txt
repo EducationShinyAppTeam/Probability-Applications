@@ -1,18 +1,8 @@
 # Things Needed for This Version
 
-1. Add screenshot ✓ 
-2. Fix description/README files ✓ 
-3. Fix The `name` provided ('square-o') does not correspond to a known icon ✓ 
-4. Rename Objects
-5. Fix the Next Button allowing skipping ✓ 
-6. Add cite this app as entry✓ 
 
 # Ideas for Future Development
-
-1. Maybe add to the prerequisites page.
-
-  recommendation from another peer review:
-    "On the prereq page, add an equivalent 
-    course background which would be indicate necessary knowledge to do well with 
-    this app. (ie. STAT 414 etc.) Maybe offer a link to a textbook or video 
-    if someone wanted to extend/supplement their learning." - pophillips 
++ Recommendation from a peer review: "On the prereq page, add an equivalent
+    course background which would be indicate necessary knowledge to do well with
+    this app. (ie. STAT 414 etc.) Maybe offer a link to a textbook or video
+    if someone wanted to extend/supplement their learning." - pophillips

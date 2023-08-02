@@ -1,3 +1,4 @@
+# Load Packages ----
 library(shiny)
 library(shinydashboard)
 library(shinyBS)
@@ -5,7 +6,7 @@ library(shinyWidgets)
 library(boastUtils)
 
 
-## Data Files ----
+# Load Data Files ----
 questionBank <- read.csv("questionBank.csv", header = TRUE)
 
 # Define the UI ----
@@ -34,7 +35,7 @@ ui <- list(
       width = 250,
       sidebarMenu(
         id = "pages",
-        menuItem("Overview", tabName = "overview", icon = icon("tachometer-alt")),
+        menuItem("Overview", tabName = "overview", icon = icon("gauge-high")),
         menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
         menuItem("Game", tabName = "game", icon = icon("gamepad")),
         menuItem("References", tabName = "references", icon = icon("leanpub"))
@@ -47,7 +48,7 @@ ui <- list(
     ## Body ----
     dashboardBody(
       tabItems(
-        ## Overview page ----
+        ### Overview page ----
         tabItem(
           tabName = "overview",
           h1("Probability Applications"),
@@ -55,7 +56,7 @@ ui <- list(
             with context into mathematical expressions using a hangman game format."),
           h2("Instructions"),
           tags$ul(
-            tags$li("You will start this game with a little man on the top of a 
+            tags$li("You will start this game with a little man on the top of a
                   tree, and you will try to prevent his fall to the ground. If you
                   provide a wrong answer, he will fall to a lower branch and
                   eventually to the ground. If you get 10 questions correct
@@ -72,10 +73,10 @@ ui <- list(
           div(
             style = "text-align: center;",
             bsButton(
-              inputId = "goToPrereq",
-              label = "Prerequisites",
+              inputId = "go1",
+              label = "GO!",
               size = "large",
-              icon = icon("book")
+              icon = icon("bolt")
             )
           ),
           br(),
@@ -94,7 +95,7 @@ ui <- list(
           div(class = "updated", "Last Update: 6/12/2023 by SB.")
           )
         ),
-        ## Prerequisites Page ----
+        ### Prerequisites Page ----
         tabItem(
           tabName = "prerequisites",
           withMathJax(),
@@ -103,251 +104,271 @@ ui <- list(
           #### Gen Eqn's box ----
           box(
             width = 12,
-            title = "General Equations",
+            title = strong("General Equations"),
             collapsible = TRUE,
             collapsed = TRUE,
-            p("Expectation"),
-            p(
-              "\\(\\text{E}\\!\\left[\\sum_i{a_{i}X_{i}}\\right]=
-              \\sum_i{a_{i}\\cdot\\text{E}\\!\\left[X_{i}\\right]}\\)"
-            ),
-            br(),
-            p("Variance and Covariance"),
-            p(
-              "\\(\\text{Var}\\!\\left[aX+b\\right]=
-                  a^2\\cdot\\text{Var}\\!\\left[X\\right]\\)",
-              br(),
-              "\\(\\text{Var}\\!\\left[X\\right]=
+            fluidRow(
+              column(
+                width = 6,
+                offset = 0,
+                p("Expectation", br(),
+                  "\\(\\text{E}\\!\\left[\\sum_i{a_{i}X_{i}}\\right]=
+                  \\sum_i{a_{i}\\cdot\\text{E}\\!\\left[X_{i}\\right]}\\)"
+                ),
+                br(),
+                p("Variance and Covariance", br(),
+                  "\\(\\text{Var}\\!\\left[aX+b\\right]=
+                  a^2\\cdot\\text{Var}\\!\\left[X\\right]\\)", br(),
+                  "\\(\\text{Var}\\!\\left[X\\right]=
                   \\text{E}\\!\\left[X^2\\right]-
-                  \\big(\\text{E}\\!\\left[X\\right]\\!\\big)^2\\)"
-            ),
-            br(),
-            p("\\(\\text{Cov}\\!\\left(aX,bY\\right)=
-                  ab\\cdot\\text{Cov}\\left(X,Y\\right)\\)",
-              br(),
-              "\\(\\text{Cov}\\!\\left(X,Y\\right)=
+                  \\big(\\text{E}\\!\\left[X\\right]\\!\\big)^2\\)", br(),
+                  br(),
+                  "\\(\\text{Cov}\\!\\left(aX,bY\\right)=
+                  ab\\cdot\\text{Cov}\\left(X,Y\\right)\\)", br(),
+                  "\\(\\text{Cov}\\!\\left(X,Y\\right)=
                   \\text{E}\\!\\left[XY\\right]-
-                  \\text{E}\\!\\left[X\\right]\\cdot\\text{E}\\!\\left[Y\\right]\\)"
-            ),
-            br(),
-            p(
-              "\\(\\text{Var}\\!\\left[X+Y\\right]=
+                  \\text{E}\\!\\left[X\\right]\\cdot\\text{E}\\!\\left[Y\\right]\\)",
+                  br(), br(),
+                  "\\(\\text{Var}\\!\\left[X+Y\\right]=
                   \\text{Var}\\!\\left[X\\right]+
                   \\text{Var}\\!\\left[Y\\right]+
-                  2\\cdot\\text{Cov}\\!\\left(X,Y\\right)\\)",
-              br(),
-              "\\(\\text{Var}\\!\\left[\\sum_{i}X_{i}\\right]=
+                  2\\cdot\\text{Cov}\\!\\left(X,Y\\right)\\)", br(),
+                  "\\(\\text{Var}\\!\\left[\\sum_{i}X_{i}\\right]=
                   \\sum_{i}\\text{Var}\\!\\left[X_{i}\\right]+
                   2\\cdot\\underset{i<j}{\\sum_{i}\\sum_{j}}
                   \\text{Cov}\\!\\left(X_{i},X_{j}\\right)\\)"
-            ),
-            br(),
-            p("Moment Generating Functions"),
-            p(
-              "\\(M_X(t)=\\text{E}\\!\\left[e^{tX}\\right]\\)",
-              br(),
-              "\\(M'_X(0)=\\text{E}\\!\\left[X\\right]\\)",
-              br(),
-              "\\(M''_X(0)=\\text{E}\\!\\left[X^2\\right]\\)"
-            ),
-            br(),
-            p(
-              "Transformations of Random Variablies using any function, \\(g\\)."
-            ),
-            p(
-              "Discrete Case:
-              \\(\\text{E}\\!\\left[g(X)\\right]=
-              \\sum\\limits_{x\\in\\mathcal{X}}g(x)\\cdot p(x)\\)",
-              br(),
-              "Continuous Case:
-              \\(\\text{E}\\!\\left[g(X)\\right]=
-              \\int\\limits_{\\mathcal{X}}g(x)\\cdot f(x)dx\\)"
+                )
+              ),
+              column(
+                width = 6,
+                offset = 0,
+                p("Moment Generating Functions", br(),
+                  "\\(M_X(t)=\\text{E}\\!\\left[e^{tX}\\right]\\)", br(),
+                  "\\(M'_X(0)=\\text{E}\\!\\left[X\\right]\\)", br(),
+                  "\\(M''_X(0)=\\text{E}\\!\\left[X^2\\right]\\)"
+                ),
+                br(),
+                p(
+                  "Transformations of Random Variablies using any function,
+                  \\(g\\).", br(),
+                  "Discrete Case: \\(\\text{E}\\!\\left[g(X)\\right]=
+                  \\sum\\limits_{x\\in\\mathcal{X}}g(x)\\cdot p(x)\\)", br(),
+                  "Continuous Case: \\(\\text{E}\\!\\left[g(X)\\right]=
+                  \\int\\limits_{\\mathcal{X}}g(x)\\cdot f(x)dx\\)"
+                )
+              )
             )
           ),
           #### Discrete Distributions ----
           h3("Discrete Random Variables"),
-          p("The probability mass function, \\(f\\), and the cumulative
+          p("The probability mass function (PMF), \\(f\\), and the cumulative
           distribution function (CDF), \\(F\\), for discrete random variables
           are \\(f(x)=P\\left[X=x\\right]\\) and \\(F(x)=P\\left[X\\leq x\\right]\\)."
           ),
           p("Note: \\(exp\\left(x\\right)=e^{x}\\)"),
           fluidRow(
             box(
-              title = "Discrete Uniform Distribution",
+              title = strong("Discrete Uniform Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
-              p("On the set \\(\\{x_i,i = 1, 2, \\ldots, k\\}\\),"),
-              p("\\(P[X=x_{i}]=1\\big/k\\)"),
-              p("in the spacial case where \\(x_i=i\\)"),
-              p("\\(\\text{E}\\!\\left[X\\right]=\\left(k+1\\right)\\!\\big/2\\)"),
-              p("\\(\\text{Var}\\!\\left[X\\right]=\\left(k^{2}-1\\right)\\!\\big/12\\)"),
-              p("\\(M_{X}(t)=\\left(\\sum\\limits^{k}_{i=1}exp\\left(it\\right)\\right)
-            \\!\\big/k\\)")
+              p("On the set \\(\\{x_i,i = 1, 2, \\ldots, k\\}\\)"),
+              tags$ul(
+                tags$li("\\(P[X=x_{i}]=1\\big/k\\)")
+              ),
+              p("In the special case where \\(x_i=i\\):"),
+              tags$ul(
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=\\left(k+1\\right)\\!\\big/2\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=\\left(k^{2}-1\\right)\\!\\big/12\\)"),
+                tags$li("\\(M_{X}(t)=\\left(\\sum\\limits^{k}_{i=1}exp\\left(it\\right)\\right)
+                        \\!\\big/k\\)")
+              )
             ),
             box(
-              title = "Poisson Distribution",
+              title = strong("Poisson Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
               p("With the parameter \\(0\\leq\\lambda<\\infty\\),"),
-              p("\\(P[X=x]=\\left(exp\\left(-\\lambda\\right)\\cdot\\lambda^{x}\\right)
-            \\big/x!\\)"),
-            p("\\(\\text{E}\\!\\left[X\\right]=\\lambda\\)"),
-            p("\\(\\text{Var}\\!\\left[X\\right]=\\lambda\\)"),
-            p("\\(M_{X}(t)=
-            exp\\left(\\lambda\\left(exp\\left(t\\right)-1\\right)\\right)\\)"),
-            br(),
-            br(),
-            br()
+              tags$ul(
+                tags$li("\\(P[X=x]=\\left(exp\\left(-\\lambda\\right)\\cdot
+                        \\lambda^{x}\\right)\\big/x!\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=\\lambda\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=\\lambda\\)"),
+                tags$li("\\(M_{X}(t)=exp\\left(\\lambda\\left(exp\\left(t\\right)
+                        -1\\right)\\right)\\)")
+              )
             )
           ),
           fluidRow(
             box(
-              title = "Bernoulli Distribution",
+              title = strong("Bernoulli Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
               p("With parameter \\(0\\leq\\theta\\leq1\\),"),
-              p("\\(P[X=x]=\\theta^{x}\\left(1-\\theta\\right)^{1-x}\\)"),
-              p("\\(\\text{E}\\!\\left[X\\right]=\\theta\\)"),
-              p("\\(\\text{Var}\\!\\left[X\\right]=\\theta\\left(1-\\theta\\right)\\)"),
-              p("\\(M_{X}(t)=\\left(1-\\theta\\right)+\\theta\\cdot exp\\left(t\\right)\\)")
+              tags$ul(
+                tags$li("\\(P[X=x]=\\theta^{x}\\left(1-\\theta\\right)^{1-x}\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=\\theta\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=\\theta\\left(1-
+                        \\theta\\right)\\)"),
+                tags$li("\\(M_{X}(t)=\\left(1-\\theta\\right)+\\theta\\cdot
+                        exp\\left(t\\right)\\)")
+              )
             ),
             box(
-              title = "Binomial Distribution",
+              title = strong("Binomial Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
-              p("With parameter \\(0\\leq\\theta\\leq1\\) and \\(n\\),"),
-              p("\\(P[X=x]={n\\choose x}\\theta^{x}\\left(1-\\theta\\right)^{n-x}\\)"),
-              p("\\(\\text{E}\\!\\left[X\\right]=n\\theta\\)"),
-              p("\\(\\text{Var}\\!\\left[X\\right]=n\\theta\\left(1-\\theta\\right)\\)"),
-              p("\\(M_{X}(t)=\\left(\\theta\\cdot exp\\left(t\\right)+
-            \\left(1-\\theta\\right)\\right)^n\\)")
+              p("With parameters \\(0\\leq\\theta\\leq1\\) and \\(n\\),"),
+              tags$ul(
+                tags$li("\\(P[X=x]={n\\choose x}\\theta^{x}\\left(1-
+                        \\theta\\right)^{n-x}\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=n\\theta\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=n\\theta\\left(1-
+                        \\theta\\right)\\)"),
+                tags$li("\\(M_{X}(t)=\\left(\\theta\\cdot exp\\left(t\\right)+
+                        \\left(1-\\theta\\right)\\right)^n\\)")
+              )
             )
           ),
           fluidRow(
             box(
-              title = "Geometric Distribution",
+              title = strong("Geometric Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
               p("With parameter \\(0\\leq\\theta\\leq 1\\),"),
-              p("\\(P[X=x]=\\theta\\left(1-\\theta\\right)^{x-1}\\)"),
-              p("\\(\\text{E}\\!\\left[X\\right]=1\\big/\\theta\\)"),
-              p("\\(\\text{Var}\\!\\left[X\\right]=
-            \\left(1-\\theta\\right)\\!\\big/\\theta^2\\)"),
-            p("\\(M_{X}(t)=\\left(\\theta\\cdot exp\\left(t\\right)\\right)
-            \\!\\big/\\left(1-\\left(1-\\theta\\right)exp\\left(t\\right)\\right)\\)")
+              tags$ul(
+                tags$li("\\(P[X=x]=\\theta\\left(1-\\theta\\right)^{x-1}\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=1\\big/\\theta\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=\\left(1-\\theta\\right)
+                        \\!\\big/\\theta^2\\)"),
+                tags$li("\\(M_{X}(t)=\\left(\\theta\\cdot exp\\left(t\\right)\\right)
+                        \\!\\big/\\left(1-
+                        \\left(1-\\theta\\right)exp\\left(t\\right)\\right)\\)")
+              ),
             ),
             box(
-              title = "Negative Binomial Distribution",
+              title = strong("Negative Binomial Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
-              p("With parameter \\(0\\leq\\theta\\leq1\\) and \\(r\\),"),
-              p("\\(P[X=x]={{r+x-1}\\choose{x}}\\theta^r\\left(1-\\theta\\right)^x\\)"),
-              p("\\(\\text{E}\\!\\left[X\\right]=\\left(r\\left(1-\\theta\\right)\\right)
-            \\!\\big/\\theta\\)"),
-            p("\\(\\text{Var}\\!\\left[X\\right]=\\left(r\\left(1-\\theta\\right)\\right)
-            \\!\\big/\\theta^2\\)"),
-            p("\\(M_{X}(t)=\\left[\\left(\\theta \\cdot exp\\left(t\\right)\\right)
-            \\!\\big/\\left(1-\\left(1-\\theta\\right)\\cdot exp\\left(t\\right)
-            \\right)\\right]^r\\)")
+              p("With parameters \\(0\\leq\\theta\\leq1\\) and \\(r\\),"),
+              tags$ul(
+                tags$li("\\(P[X=x]={{r+x-1}\\choose{x}}\\theta^r\\left(1-
+                        \\theta\\right)^x\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=\\left(r\\left(1-
+                        \\theta\\right)\\right)\\!\\big/\\theta\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=\\left(r\\left(1-
+                        \\theta\\right)\\right)\\!\\big/\\theta^2\\)"),
+                tags$li("\\(M_{X}(t)=\\left[\\left(\\theta \\cdot
+                        exp\\left(t\\right)\\right)\\!\\big/\\left(1-
+                        \\left(1-\\theta\\right)\\cdot
+                        exp\\left(t\\right)\\right)\\right]^r\\)")
+              )
             )
           ),
-          ### Continuous Distributions ----
+          #### Continuous Distributions ----
           h3("Continuous Random Variables"),
-          p("For a probability density function, \\(f\\), the cumulative
+          p("For a probability density function (PDF), \\(f\\), the cumulative
           distribution function (CDF), \\(F\\), is defined as
           \\(F(a)=P\\left[X\\leq a\\right]=\\int\\limits_{-\\infty}^af(x)dx\\)."),
           fluidRow(
             box(
-              title = "Continuous Uniform Distribution",
+              title = strong("Continuous Uniform Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
-              p("With parameters \\(A\\) and \\(B\\) such that \\(A\\leq x\\leq B\\),"),
-              p("\\(f(x)=1\\!\\big/\\left(B-A\\right)\\)"),
-              p("\\(\\text{E}\\!\\left[X\\right]=\\left(A + B\\right)
-              \\!\\big/2\\)"),
-              p("\\(\\text{Var}\\!\\left[X\\right]=\\left(B-A\\right)^2
-            \\!\\big/12\\)"),
-            p("\\(M_{X}(t)=\\frac{exp\\left(Bt\\right)-exp\\left(At\\right)}
-              {\\left(B-A\\right)t}\\)")
+              p("With parameters \\(A\\) and \\(B\\) such that
+                \\(A\\leq x\\leq B\\),"),
+              tags$ul(
+                tags$li("\\(f(x)=1\\!\\big/\\left(B-A\\right)\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=
+                        \\left(A + B\\right)\\!\\big/2\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=
+                        \\left(B-A\\right)^2\\!\\big/12\\)"),
+                tags$li("\\(M_{X}(t)=\\frac{exp\\left(Bt\\right)-exp\\left(At\\right)}
+                        {\\left(B-A\\right)t}\\)")
+              )
             ),
             box(
-              title = "Normal (Gaussian) Distribution",
+              title = strong("Normal (Gaussian) Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
               p("With parameters \\(\\mu\\) and \\(\\sigma^2>0\\),"),
-              p("\\(f(x)=\\frac{1}{\\sqrt[2]{2\\pi\\sigma^2}}\\cdot
-              exp\\left(\\frac{-\\left(x-\\mu\\right)^2}{2\\sigma^2}\\right)\\)",
-              br(),
-              "(For a standard normal with \\(\\mu=0\\) and \\(\\sigma=1\\), the
-              density is also sometimes called \\(\\phi\\) with the CDF called
-              \\(\\Phi\\))",),
-              p("\\(\\text{E}\\!\\left[X\\right]=\\mu\\)"),
-              p("\\(\\text{Var}\\!\\left[X\\right]=\\sigma^2\\)"),
-              p("\\(M_{X}(t)=exp\\left(\\mu t + \\frac{\\sigma^2t^2}{2}\\right)\\)")
+              tags$ul(
+                tags$li("\\(f(x)=\\frac{1}{\\sqrt[2]{2\\pi\\sigma^2}}\\cdot
+                        exp\\left(\\frac{-\\left(x-\\mu\\right)^2}
+                        {2\\sigma^2}\\right)\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=\\mu\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=\\sigma^2\\)"),
+                tags$li("\\(M_{X}(t)=exp\\left(\\mu t + \\frac{\\sigma^2t^2}{2}
+                        \\right)\\)")
+              ),
+              p("When \\(\\mu=0\\) and \\(\\sigma^2=1\\), we call the distribution
+                the ", tags$em("Standard Normal Distribution."), "The PDF in this
+                case is sometimes called \\(\\phi\\) and the CDF gets called
+                \\(\\Phi\\).")
             )
           ),
           fluidRow(
             box(
-              title = "Exponential Distribution",
+              title = strong("Exponential Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
               p("With parameter \\(\\lambda >0\\),"),
-              p("\\(f(x)=\\lambda\\cdot exp\\left(-\\lambda x\\right)\\)"),
-              p("\\(\\text{E}\\!\\left[X\\right]=1\\!\\big/\\lambda\\)"),
-              p("\\(\\text{Var}\\!\\left[X\\right]=1\\!\\big/\\lambda^2\\)"),
-              p("\\(M_{X}(t)=\\lambda\\big/\\left(\\lambda-t\\right)\\)"),
-              footer = "Note: Can also be parameterized with \\(\\beta = 1/\\lambda\\)"
+              tags$ul(
+                tags$li("\\(f(x)=\\lambda\\cdot exp\\left(-\\lambda x\\right)\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=1\\!\\big/\\lambda\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=1\\!\\big/\\lambda^2\\)"),
+                tags$li("\\(M_{X}(t)=\\lambda\\big/\\left(\\lambda-t\\right)\\)")
+              ),
+              p("The Exponential Distribution's parameter may also be expressed
+                as \\(\\beta=1/\\lambda\\).")
             ),
             box(
-              title = "Gamma Distribution",
+              title = strong("Gamma Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
               p("With parameters \\(\\alpha > 0\\) and \\(\\lambda > 0\\),"),
-              p("\\(f(x)=\\left(\\lambda^{\\alpha}\\cdot x^{\\alpha-1}\\cdot
-              exp\\left(-x\\lambda\\right)\\right)\\!\\big/{\\Gamma(\\alpha)}\\)"),
-              p("\\(\\text{E}\\!\\left[X\\right]=\\alpha\\big/\\lambda\\)"),
-              p("\\(\\text{Var}\\!\\left[X\\right]=\\alpha\\big/\\lambda^2\\)"),
-              p("\\(M_{X}(t)=\\left(\\lambda\\big/
-              \\left(\\lambda-t\\right)\\right)^{\\alpha}\\)"),
-              footer = "Note: Can also be parameterized with \\(\\beta = 1/\\lambda\\)"
+              tags$ul(
+                tags$li("\\(f(x)=\\left(\\lambda^{\\alpha}\\cdot x^{\\alpha-1}
+                        \\cdot exp\\left(-x\\lambda\\right)\\right)
+                        \\!\\big/{\\Gamma(\\alpha)}\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=\\alpha\\big/\\lambda\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=\\alpha\\big/\\lambda^2\\)"),
+                tags$li("\\(M_{X}(t)=\\left(\\lambda\\big/
+                        \\left(\\lambda-t\\right)\\right)^{\\alpha}\\)")
+              ),
+              p("The Gamma Distribution may also be parameterized with
+                \\(\\beta = 1/\\lambda\\).")
             )
           ),
           fluidRow(
             box(
-              title = "\\(\\chi^2\\) (Chi-squared) Distribution",
+              title = strong("\\(\\chi^2\\) (Chi-squared) Distribution"),
               width = 6,
               collapsible = TRUE,
               collapsed = TRUE,
               p("With parameter \\(k \\geq 1\\) and an integer,"),
-              p("\\(f(x)=\\left(x^{k/2}\\cdot exp\\left(-x/2\\right)\\right)\\!\\big/
-              \\left(\\Gamma(k/2)\\cdot 2^{k/2}\\right)\\)"),
-              p("\\(\\text{E}\\!\\left[X\\right]=k\\)"),
-              p("\\(\\text{Var}\\!\\left[X\\right]=2k\\)"),
-              p("\\(M_{X}(t)=\\left(1\\!\\big/\\left(1-2t\\right)\\right)^{k/2}\\)")
-            )
-          ),
-          br(),
-          div(
-            style = "text-align: center;",
-            bsButton(
-              inputId = "goToGame",
-              label = "Game!",
-              size = "large",
-              icon = icon("bolt")
+              tags$ul(
+                tags$li("\\(f(x)=\\left(x^{k/2}\\cdot
+                        exp\\left(-x/2\\right)\\right)\\!\\big/
+                        \\left(\\Gamma(k/2)\\cdot 2^{k/2}\\right)\\)"),
+                tags$li("\\(\\text{E}\\!\\left[X\\right]=k\\)"),
+                tags$li("\\(\\text{Var}\\!\\left[X\\right]=2k\\)"),
+                tags$li("\\(M_{X}(t)=\\left(1\\!\\big/
+                        \\left(1-2t\\right)\\right)^{k/2}\\)")
+              )
             )
           )
         ),
-        ## Game Page ----
+        ### Game Page ----
         tabItem(
           tabName = "game",
           withMathJax(),
@@ -368,7 +389,7 @@ ui <- list(
                   direction = "vertical",
                   selected = character(0),
                   checkIcon = list(
-                    yes = icon("check-square"),
+                    yes = icon("square-check"),
                     no = icon("square")
                   ),
                   choices = list(
@@ -436,12 +457,10 @@ ui <- list(
                 align = "center"
               )
             )
-          ),
-          uiOutput("math1"),
-          uiOutput("math2")
+          )
         ),
+        ### References ----
         tabItem(
-          ## References ----
           tabName = "references",
           h2("References"),
           p(
@@ -484,37 +503,26 @@ ui <- list(
     )
   )
 )
-# Define the server ---
+
+# Define the server ----
 server <- function(input, output, session) {
   ## Info Button ----
   observeEvent(
-    eventExpr = input$info, 
+    eventExpr = input$info,
     handlerExpr = {
       sendSweetAlert(
         session = session,
         title = "Information",
         text = "This app quizzes your knowledge of turning probability applications
-              with context into mathematical expressions using a hangman game format.",
+              with context into mathematical expressions using a game format.",
         type = "info"
       )
     }
   )
 
-  ## Prerequisites Button ----
+  ## Go Button ----
   observeEvent(
-    eventExpr = input$goToPrereq,
-    handlerExpr = {
-      updateTabItems(
-        session = session,
-        inputId = "pages",
-        selected = "prerequisites"
-      )
-    }
-  )
-
-  # Game button ----
-  observeEvent(
-    eventExpr = input$goToGame,
+    eventExpr = input$go1,
     handlerExpr = {
       updateTabItems(
         session = session,
@@ -530,6 +538,7 @@ server <- function(input, output, session) {
     size = nrow(questionBank),
     replace = FALSE
   )
+
   scoring <- reactiveValues(
     correct = 0,
     mistakes = 0,
@@ -555,7 +564,7 @@ server <- function(input, output, session) {
     }
   )
 
-  # Display a question ----
+  ## Display a question ----
   output$question <- renderUI(
     expr = {
       updateRadioGroupButtons(
@@ -569,27 +578,24 @@ server <- function(input, output, session) {
           ansChoices()[4]
         ),
         checkIcon = list(
-          yes = icon("check-square"),
+          yes = icon("square-check"),
           no = icon("square")
         ),
         status = "game"
       )
-      output$math1 <- renderUI({withMathJax()})
-      output$math2 <- renderUI({withMathJax()})
+      typesetMath(session = session)
       withMathJax(questionBank[scoring$questionNum, "Problem.Description"])
     }
   )
-  
+
   ## Display Hint ----
   observeEvent(
     eventExpr = input$hint,
     handlerExpr = {
-      output$math1 <- renderUI({withMathJax()})
-      output$math2 <- renderUI({withMathJax()})
       output$hintDisplay <- renderUI(
         expr = {
           withMathJax(
-            p(tags$b("Hint:"), questionBank[scoring$questionNum, "Hint"])
+            p(strong("Hint:"), questionBank[scoring$questionNum, "Hint"])
           )
         }
       )
@@ -736,7 +742,7 @@ server <- function(input, output, session) {
       )
     }
   )
-  
+
   ## Cartoon Display ----
   output$gameProgressTree <- renderUI(
     expr = {
@@ -776,4 +782,5 @@ server <- function(input, output, session) {
   )
 }
 
+# Boast App Call ----
 boastUtils::boastApp(ui = ui, server = server)

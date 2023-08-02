@@ -6,4 +6,4 @@
 ![App Screenshot](../docs/Screenshot.png)
 
 # App Description
-This app quizzes your knowledge of turning probability applications with context into mathematical expressions using a hangman game format.
+This app quizzes your knowledge of turning probability applications with context into mathematical expressions using a game format.
